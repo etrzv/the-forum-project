@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/base-styles.css' %}" />
+    <title>The Forum</title>
+  </head>
+  <body>
+    <header>
+      <a href="/dashboard" class="logo"><h1>The Forum</h1></a>
+      <nav>
+        <div class="nav">
+          <i class="fa-solid fa-house"></i>
+          <a href="/home" class="home">Home</a>
+        </div>
+        <div class="nav">
+          <i class="fa-solid fa-user"></i>
+          <a href="/profile" class="profile">Profile</a>
+        </div>
+        <div class="nav">
+          <i class="fa-solid fa-gear"></i>
+          <a href="/settings" class="settings">Settings</a>
+        </div>
+      </nav>
+      <hr />
+    </header>
+    <main>
+        {% block page_content %}
+        {% endblock %}
+    </main>
+    <footer>
+      <hr />
+      <p>
+        <em>Email: emil_trz@icloud.com</em>
+      </p>
+      <p>
+        <em>Number: 0896649113</em>
+      </p>
+    </footer>
+  </body>
+</html>
