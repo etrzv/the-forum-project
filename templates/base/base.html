@@ -14,15 +14,19 @@
       <nav>
         <div class="nav">
           <i class="fa-solid fa-house"></i>
-          <a href="/home" class="home">Home</a>
+          <a href="{% url 'show index' %}" class="home">Home</a>
         </div>
-        <div class="nav">
-          <i class="fa-solid fa-user"></i>
-          <a href="/profile" class="profile">Profile</a>
-        </div>
-        <div class="nav">
-          <i class="fa-solid fa-gear"></i>
-          <a href="/settings" class="settings">Settings</a>
+{#        <div class="nav">#}
+{#          <i class="fa-solid fa-user"></i>#}
+{#          <a href="{% url 'details user' pk=object.pk %}" class="profile">Profile</a>#}
+{#        </div>#}
+{#        <div class="nav">#}
+{#          <i class="fa-solid fa-gear"></i>#}
+{#          <a href="{% url 'edit user' pk=object.pk %}" class="settings">Settings</a>#}
+{#        </div>#}
+          <div class="nav">
+          <i class="fa-solid fa-exit"></i>
+          <a href="{% url 'logout user' %}" class="logout">Logout</a>
         </div>
       </nav>
       <hr />
