@@ -11,18 +11,26 @@ UserModel = get_user_model()
 @admin.register(UserModel)
 # from django.contrib.auth.admin import UserAdmin was changed to suit the users' info
 class UserAdmin(ModelAdmin):
-    # list_display = ('email', 'password',)
+    # form = UserEditForm
+    form = UserCreateForm
+
+    list_display = ('email', 'is_staff', 'is_superuser', 'is_active')  # what appears on the search bar above the users
+    list_filter = ('is_staff', 'is_superuser', )    # filter on the right
+    search_fields = ('email', )
+
+    # for editing
     fieldsets = (
         (
             'Mandatory Information:',
             {
                 'fields': (
                     'email',
-                    'password',
+                    'password1',
+                    'password2',
                 ),
             }),
         (
-            'Important dates',
+            'Important dates:',
             {
                 'fields': (
                     'last_login',
@@ -30,47 +38,36 @@ class UserAdmin(ModelAdmin):
                 ),
             },
         ),
+        (
+            'Permissions:',
+            {
+                'fields': (
+                    'is_staff',
+                    'is_superuser',
+                ),
+            }),
     )
 
-
-'''    form = UserEditForm
-    add_form = UserCreateForm
-    list_filter = ()
-    fieldsets = (
+    # for creating
+    add_fieldsets = (
         (
             None,
             {
+                'classes': ('wide', ),
                 'fields': (
                     'email',
                     'password',
+                    # 'password2',
                 ),
             }),
-
-        (
-            'Permissions',
-            {
-                'fields': (
-                    'is_active',
-                    'is_staff',
-                    'is_superuser',
-                    'groups',
-                    'user_permissions',
-                ),
-            },
-        ),
-        (
-            'Important dates',
-            {
-                'fields': (
-                    'last_login',
-                    'date_joined',
-                ),
-            },
-        ),
     )
 
     def get_form(self, request, obj=None, **kwargs):
-        return super().get_form(request, obj, **kwargs)'''
+        """
+        Return a Form class for use in the admin add view. This is used by
+        add_view and change_view.
+        """
+        return super().get_form(request, obj, **kwargs)
 
 
 

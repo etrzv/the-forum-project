@@ -10,14 +10,21 @@ UserModel = get_user_model()
 class UserCreateForm(UserCreationForm):
     first_name = forms.CharField()
     last_name = forms.CharField()
+    # class UserCreateForm(auth_forms.UserCreationForm):
+    #     class Meta:
+    #         model = UserModel
+    #         fields = ('username', 'email')
+    #         field_classes = {
+    #             'username': auth_forms.UsernameField,
+    #         }
 
     class Meta:
         model = UserModel
-        fields = ('email', )
-        field_classes = {'email': auth_forms.UsernameField}
+        fields = (UserModel.USERNAME_FIELD, )
+        # field_classes = {'email': auth_forms.UsernameField}
 
     def save(self, commit=True):
-        user = super().save(commit=commit)
+        user = super(UserCreateForm, self).save(commit=commit)
         first_name = self.cleaned_data['first_name']
         last_name = self.cleaned_data['last_name']
         profile = Profile(
@@ -25,9 +32,24 @@ class UserCreateForm(UserCreationForm):
             last_name=last_name,
             user=user,
         )
+
         if commit:
             profile.save()
+
         return user
+
+    # def save(self, commit=True):
+    #     user = super().save(commit=commit)
+    #     first_name = self.cleaned_data['first_name']
+    #     last_name = self.cleaned_data['last_name']
+    #     profile = Profile(
+    #         first_name=first_name,
+    #         last_name=last_name,
+    #         user=user,
+    #     )
+    #     if commit:
+    #         profile.save()
+    #     return user
 
 
 class UserEditForm(UserChangeForm):
@@ -35,7 +57,7 @@ class UserEditForm(UserChangeForm):
 
     class Meta:
         model = UserModel
-        fields = ['email', 'password', 'is_active']
+        fields = ('email', 'password', 'is_active')
 
 
 '''    

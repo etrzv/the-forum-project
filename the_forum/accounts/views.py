@@ -16,13 +16,13 @@ class SignUpView(CreateView):
     success_url = reverse_lazy('show index')
 
     # signing the user in after successful sign up
-    # def form_valid(self, form):
-    #     result = super().form_valid(form)
-    #
-    #     login(self.request, self.object)
-    #     return result
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        login(self.request, self.object)
+        return result
 
 
+# LoginView -> form_class = AuthenticationForm -> username / password
 class SignInView(LoginView):
     template_name = 'accounts/login-page.html'
     # success_url = reverse_lazy('show index')

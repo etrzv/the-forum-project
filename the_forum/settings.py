@@ -19,8 +19,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'the_forum.accounts',
     'the_forum.common',
+    'the_forum.accounts',
+    'the_forum.articles',
 ]
 
 MIDDLEWARE = [
@@ -55,17 +56,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'the_forum.wsgi.application'
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'the_forum_db',
+        'NAME': 'the_forum_db_1',
         'USER': 'postgres',
         'PASSWORD': '1123QwER',
         'HOST': '127.0.0.1',

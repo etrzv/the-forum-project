@@ -1,14 +1,39 @@
 {% extends "base/base.html" %}
 {% block page_content %}
-    <div class="login-box">
-        <form method="post" action="{% url 'login user' %}">
-            {{ form }}
-            <input type="hidden" name="next" value="{{ next }}">
-            <button type="submit">Log in</button>
-            {% csrf_token %}
-        </form>
-    </div>
-    <div class="register-box">
-        <p>Don't have account? <a href="{% url 'register user' %}">Register</a></p>
-    </div>
+{% load placeholders %}
+{% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/accounts/login.css' %}" />
+        <body>
+            <main>
+                <div class="welcome">
+                    <h2>Welcome</h2>
+                </div>
+                <div class="to">
+                    <h2>to The Forum</h2>
+                </div>
+                <form method="post" action="{% url 'login user' %}">
+                    <div class="container">
+                        <ol>
+                            <li class="uname">
+                                <b>Email:</b>
+                                {{ form.username|placeholder:'Email' }}
+                            </li>
+                            <li class="pws">
+                                <b>Password:</b>
+                                {{ form.password|placeholder:'Password' }}
+                            </li>
+                            <li>
+                                <button type="submit">Login</button>
+                                {% csrf_token %}
+                            </li>
+                        </ol>
+                    </div>
+                </form>
+                <div class="second-option">
+                    <p>Don't have an account? <a href="{% url 'register user' %}">Register</a></p>
+                </div>
+            </main>
+        </body>
+
 {% endblock %}

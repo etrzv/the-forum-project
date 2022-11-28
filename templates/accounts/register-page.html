@@ -1,11 +1,51 @@
-{#{% extends "base/base.html" %}#}
-{#{% block page_content %}#}
-    <form method="post" action="{% url 'register user' %}">
-        {{ form }}
-        <button type="submit">Register</button>
-        {% csrf_token %}
-    </form>
-    <div class="second-option">
-        <p>Have an account? <a href="{% url 'login user' %}">Log in</a></p>
-    </div>
-{#{% endblock %}#}
+{% extends "base/base.html" %}
+{% block page_content %}
+{% load placeholders %}
+{% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/accounts/register.css' %}" />
+        <body>
+            <main>
+                <div class="welcome">
+                    <h2>Welcome</h2>
+                </div>
+                <div class="to">
+                    <h2>to The Forum</h2>
+                </div>
+                <form method="post" action="{% url 'register user' %}">
+                    <div class="container">
+                        <ol>
+                            <li class="uname">
+                                <b>Email:</b>
+                                {{ form.email|placeholder:'Email' }}
+                            </li>
+                            <li class="fname">
+                                <b>First Name:</b>
+                                {{ form.first_name|placeholder:'First Name' }}
+                            </li>
+                            <li class="lname">
+                                <b>Last Name:</b>
+                                {{ form.last_name|placeholder:'Last Name' }}
+                            </li>
+                            <li class="pws">
+                                <b>Password:</b>
+                                {{ form.password1|placeholder:'Password' }}
+                            </li>
+                            <li class="pws">
+                                <b>Confirm Password:</b>
+                                {{ form.password2|placeholder:'Repeat password' }}
+                            </li>
+                            <li>
+                            <button type="submit">Register</button>
+                                {% csrf_token %}
+                            </li>
+                        </ol>
+                </div>
+                </form>
+                <div class="second-option">
+                    <p>Already have an account? <a href="{% url 'login user' %}">Login</a></p>
+                </div>
+            </main>
+        </body>
+
+{% endblock %}

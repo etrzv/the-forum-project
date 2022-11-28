@@ -39,6 +39,9 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+    # called when createsuperuser 
+    # relates to the _create_user function in the UserManager
 
     # creating a custom manager that is overridden here - from the UserManager base class
     objects = AppUserManager()
@@ -73,6 +76,8 @@ class Profile(models.Model):
 
     username = models.CharField(
        max_length=USERNAME_MAX_LEN,
+        null=True,
+        blank=True,
     )
 
     profile_image = models.ImageField(

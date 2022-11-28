@@ -4,8 +4,35 @@
     Welcome to your home page     {{ request.user.email }}
     {{ request.user.first_name }}
     {{ request.user.username }}
+    {{ request.user.pk }}
 
     </h3>
+    <body>
+        <main>
+            <p>Create your article here: </p>
+            <a href="{% url 'add article' %}">Add Article</a>
+        </main>
+    </body>
     {% csrf_token %}
 
 {% endblock %}
+
+{#    <div class="container">#}
+{#        <div class="col-9">#}
+{##}
+{#            <!-- Start Searchbar Form -->#}
+{#            <form class="searchbar" method="get" action="{% url 'index' %}">#}
+{#                {{ search_form }}#}
+{#                <button>#}
+{#                    <img src="{% static 'images/search.png' %}" height="18" alt="img2">#}
+{#                </button>#}
+{#                {% csrf_token %}#}
+{#            </form>#}
+{#            <!-- End Searchbar Form -->#}
+{##}
+{#            <!-- Start Pet Photos Post Section -->#}
+{#            {% for photo in photos %}#}
+{#                {% include 'partials/photo-item.html' with photo=photo %}#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    </div>#}

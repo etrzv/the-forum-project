@@ -1,0 +1,75 @@
+@import 'https://use.fontawesome.com/releases/v6.2.0/css/all.css';
+
+
+/* Welcome to The Forum */
+body .welcome, .to {
+    position: relative;
+    display: flex;
+    top: 80px;
+    font-size: 20px;
+}
+
+body .welcome {
+    left: 20%;
+    margin-bottom: -30px;
+}
+
+body .to {
+    left: 25%;
+    margin-top: 30px;
+}
+
+body div {
+    max-width: 40%;
+}
+
+/* Registration Box */
+main .container {
+    position: relative;
+    display: inline-flex; 
+    left: 45%;
+    top: 10px; 
+
+    border: 2px solid black; 
+    border-radius: 5px; 
+
+    padding: 20px;
+    box-shadow: 5px 5px 10px 2px rgba(0,0,0,.8);    
+}
+
+/*main .container {*/
+/*    font-size: 20px;*/
+/*}*/
+
+main .psw b{
+    font-size: 20px;
+}
+
+body .container li {
+    list-style: none;
+    padding: 45px 10px 10px;
+}
+
+.container button {
+    position: relative;
+    font-size: 20px; 
+    margin: 5px;
+    left: 30%; 
+}
+
+.container button:hover {
+    background-color: green;
+    color: white;
+    border: 0;
+    border-radius: 5px;
+    padding: 3px 10px;
+}
+
+main .second-option {
+    position: relative;
+    display: inline-flex;
+
+
+     left: 51%;
+     top: 10px;
+}
