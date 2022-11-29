@@ -9,55 +9,57 @@
     <title>The Forum</title>
   </head>
   <body>
-    <header>
-      <a href="{% url 'show index' %}" class="logo"><h1>The Forum</h1></a>
+  <header>
+      <div class="logo">
+          <a href="{% url 'show index' %}"><h1>The Forum</h1></a>
+      </div>
       <nav>
-          {% if request.user.is_authenticated %}
-            <div class="nav">
-                <div class="icon">
-                    <i class="fa-solid fa-house"></i>
-                </div>
-
-              <a href="{% url 'show index' %}" class="home">Home</a>
-            </div>
-    {#        <div class="nav">#}
-    {#          <i class="fa-solid fa-user"></i>#}
-    {#          <a href="{% url 'details user' %}" class="profile">Profile</a>#}
-    {#        </div>#}
-    {#        <div class="nav">#}
-    {#          <i class="fa-solid fa-gear"></i>#}
-    {#          <a href="{% url 'edit user' pk=request.user.pk %}" class="settings">Settings</a>#}
-    {#        </div>#}
-              <div class="nav">
-                  <div class="icon">
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                  </div>
-                  <a href="{% url 'logout user' %}" class="logout">Logout</a>
-              </div>
-          {% endif %}
           <div class="nav">
               <div class="icon">
-                <i class="fa-solid fa-magnifying-glass"></i>
+                  <i class="fa-solid fa-magnifying-glass"></i>
               </div>
               <label class="searchbar">
                   <input type="text" placeholder="Search...">
               </label>
-              {% csrf_token %}
-          </div>
-      </nav>
-    </header>
-    <main>
-        {% block page_content %}
-        {% endblock %}
-    </main>
-    <footer>
+                {% csrf_token %}
+            </div>
+            {% if request.user.is_authenticated %}
+                <div class="nav">
+                    <div class="icon">
+                        <i class="fa-solid fa-house"></i>
+                    </div>
+                    <a href="{% url 'show index' %}" class="home">Home</a>
+                </div>
+                <div class="nav">
+                    <i class="fa-solid fa-user"></i>
+                    <a href="#" class="profile">Profile</a>
+                </div>
+    {#        <div class="nav">#}
+    {#          <i class="fa-solid fa-gear"></i>#}
+    {#          <a href="{% url 'edit user' pk=request.user.pk %}" class="settings">Settings</a>#}
+    {#        </div>#}
+                <div class="nav">
+                    <div class="icon">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </div>
+                    <a href="{% url 'logout user' %}" class="logout">Logout</a>
+                </div>
+            {% endif %}
+        </nav>
+  </header>
+  <main>
+      {% block page_content %}
+
+      {% endblock %}
+  </main>
+  <footer>
       <hr />
       <p>
-        <em>Email: emil_trz@icloud.com</em>
+          <em>Email: emil_trz@icloud.com</em>
       </p>
       <p>
-        <em>Number: 0896649113</em>
+          <em>Number: 0896649113</em>
       </p>
-    </footer>
+  </footer>
   </body>
 </html>

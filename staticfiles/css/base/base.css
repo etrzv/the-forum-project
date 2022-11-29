@@ -4,11 +4,12 @@
 body {
     font-family: Arial, serif;
     background-color: rgb(248, 241, 231);
+    max-height: 100%;
+    min-height: 100%;
 }
 
 main {
-    max-height: 300px;
-
+    /*max-height: 20px;*/
 }
 
 body header {
@@ -58,6 +59,7 @@ footer {
     top: 500px;
     margin-left: 2%;
     margin-right: 2%;
+    padding-bottom: 20px;
 }
 
 /* ICONS */

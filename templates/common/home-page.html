@@ -1,10 +1,21 @@
 {% extends "base/base.html" %}
 {% block page_content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/common/home-page.css' %}" />
     <h3>
-    Welcome to your home page     {{ request.user.email }}
-    {{ request.user.first_name }}
-    {{ request.user.username }}
-    {{ request.user.pk }}
+    Welcome to your home page
+    <p>{{ request.user.email }}</p>
+    <p>{{ request.user.first_name }}</p>
+        <p>{{ request.user.username }}</p>
+        <p>{{ request.user.pk }}</p>
+    {% for article in articles %}
+{#        <form method="post" action="{% url 'edit article' email=email article_slug=article_slug%}">#}
+        {{ article.title }}
+        {% if article.photo %}
+            {{ article.photo }}
+        {% endif %}
+        {{ article.content }}
+    {% endfor %}
 
     </h3>
     <body>
@@ -16,23 +27,3 @@
     {% csrf_token %}
 
 {% endblock %}
-
-{#    <div class="container">#}
-{#        <div class="col-9">#}
-{##}
-{#            <!-- Start Searchbar Form -->#}
-{#            <form class="searchbar" method="get" action="{% url 'index' %}">#}
-{#                {{ search_form }}#}
-{#                <button>#}
-{#                    <img src="{% static 'images/search.png' %}" height="18" alt="img2">#}
-{#                </button>#}
-{#                {% csrf_token %}#}
-{#            </form>#}
-{#            <!-- End Searchbar Form -->#}
-{##}
-{#            <!-- Start Pet Photos Post Section -->#}
-{#            {% for photo in photos %}#}
-{#                {% include 'partials/photo-item.html' with photo=photo %}#}
-{#            {% endfor %}#}
-{#        </div>#}
-{#    </div>#}

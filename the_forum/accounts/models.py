@@ -19,6 +19,7 @@ the PermissionsMixin has 3 properties that allows us to make our users in the cl
 this information is needed only for the login:
 '''
 
+
 # TODO:
 # django.core.exceptions.ImproperlyConfigured: AUTH_USER_MODEL refers to model 'accounts.AppUser'
 # that has not been installed
@@ -36,7 +37,9 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    date_joined = models.DateTimeField(default=timezone.now)
+    # auto_now: changes on creation and modification.
+    # auto_now_add: changes once on creation only.
+    date_joined = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -60,8 +63,8 @@ class Profile(models.Model):
             MinLengthValidator(FIRST_NAME_MIN_LEN),
             validate_only_letters,
         ),
-        # null=True,
-        # blank=True,
+        null=False,
+        blank=False,
     )
 
     last_name = models.CharField(
@@ -70,18 +73,18 @@ class Profile(models.Model):
             MinLengthValidator(LAST_NAME_MIN_LEN),
             validate_only_letters,
         ),
-        # null=True,
-        # blank=True,
+        null=False,
+        blank=False,
     )
 
     username = models.CharField(
-       max_length=USERNAME_MAX_LEN,
+        max_length=USERNAME_MAX_LEN,
         null=True,
         blank=True,
     )
 
     profile_image = models.ImageField(
-        validators=(validate_file_max_size_in_mb, ),
+        validators=(validate_file_max_size_in_mb,),
         null=True,
         blank=True,
     )
@@ -92,6 +95,7 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
         primary_key=True,
     )
+
 
 '''
 from django.db import models

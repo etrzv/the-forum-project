@@ -36,6 +36,7 @@ class ArticleComment(models.Model):
 
 class ArticleLike(models.Model):
     # Articles' field for likes is named `{NAME_OF_THIS_MODEL.lower()}_set`
+    # likes_count': photo.photolike_set.count(),
 
     article = models.ForeignKey(
         Article,

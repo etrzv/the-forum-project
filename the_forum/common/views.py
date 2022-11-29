@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, ListView
 
 from the_forum.accounts.forms import UserCreateForm
+from the_forum.articles.models import Article
 
 ''' 
 1. index 
@@ -21,12 +22,20 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['articles'] = Article.objects.all()
+        #     photo = Photo.objects.filter(pk=pk) \
+        #         .get()
+
         # context['articles'] = UserModel.objects.filter.get()
+        # context['profile'] = UserModel.objects\
+        #     .prefetch_related('tagged_articles')\
+        #     .filter(tagged_articles__user_profile=self.request.user)
+        # TODO: how to connect the articles to the current user
+
         return context
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
     #     context['hide_additional_nav_items'] = True
-    #     context['profile'] = UserModel.objects.filter.get(user=UserModel.pk)
     #     return context
 
     def dispatch(self, request, *args, **kwargs):
@@ -36,6 +45,47 @@ class HomeView(TemplateView):
 
 
 '''
+
+def show_dashboard(request):
+    profile = get_profile()
+    # get all the photos of the tagged pets for the given user
+    pet_photos = set(
+                PetPhoto.objects
+                .prefetch_related('tagged_pets')
+                .filter(tagged_pets__user_profile=profile))
+    context = {
+        'pet_photos': pet_photos,
+
+    }
+
+    return render(request, 'dashboard.html', context)
+
+
+def show_profile(request):
+    return render(request, 'profile_details.html')
+
+
+def show_pet_photo_details(request, pk):
+    pet_photo = PetPhoto.objects\
+        .prefetch_related('tagged_pets')\
+        .get(pk=pk)
+
+    context = {
+        'pet_photo': pet_photo,
+    }
+
+    return render(request, 'photo_details.html', context)
+
+
+def like_pet_photo(request, pk):
+    # like the photo with pk
+    pet_photo = PetPhoto.objects.get(pk=pk)
+    pet_photo.likes += 1
+    pet_photo.save()
+
+    return redirect('pet photo details', pk)
+    
+    
 def show_index(request):
     if request.method == 'POST':
         form = CreateProfileForm(request.POST, request.FILES)

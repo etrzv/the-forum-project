@@ -8,10 +8,24 @@ class ArticleCreateForm(forms.ModelForm):
         model = Article
         fields = ('title', 'photo', 'content', )
 
-        labels = {
-            "title": "Article's Title",
-            "photo": 'Link to image (optional)',
-            "content": "Article's Content",
+        # labels = {
+        #     "title": "Article's Title",
+        #     "photo": 'Link to image (optional)',
+        #     "content": "Article's Content",
+        # }
+
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 4, 'cols': 20})
+        }
+
+
+class ArticleEditForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = ('title', 'photo', 'content', )
+
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 4, 'cols': 20})
         }
 
 

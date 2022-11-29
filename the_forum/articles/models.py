@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.text import slugify
+from django.utils import timezone
 
 
 UserModel = get_user_model()
@@ -27,6 +28,11 @@ class Article(models.Model):
         blank=True,
     )
 
+    # auto_now: changes on creation and modification.
+    # auto_now_add: changes once on creation only.
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
+
     slug = models.SlugField(
         unique=True,
         null=False,
@@ -46,3 +52,6 @@ class Article(models.Model):
             self.slug = slugify(f'{self.id}-{self.title}')
 
         return super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.date_created, self.date_modified

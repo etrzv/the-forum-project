@@ -1,9 +1,33 @@
 {% extends "base/base.html" %}
 {% block page_content %}
-    <p>Add article page:</p>
-    <form action="{% url 'add article' %}" method="post">
-        {{ form }}
-        <button type="submit">Create</button>
-        {% csrf_token %}
-    </form>
+{% load placeholders %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/articles/article-add.css' %}" />
+    <body>
+    <h2>What would you like to share today?</h2>
+        <main>
+            <form method="post" action="{% url 'add article' %}">
+                <article class="container">
+                    <ol>
+                        <li class="title">
+                            <b>Article's Title:</b>
+                            {{ form.title|placeholder:'Title' }}
+                        </li>
+                        <li class="photo">
+                            <b>Link to image (optional):</b>
+                            {{ form.photo|placeholder:'Photo' }}
+                        </li>
+                        <li class="content">
+                            <b>Article's Content:</b>
+                            {{ form.content|placeholder:'Content' }}
+                        </li>
+                        <li>
+                            <button type="submit">Create</button>
+                            {% csrf_token %}
+                        </li>
+                    </ol>
+                </article>
+            </form>
+        </main>
+    </body>
 {% endblock %}
