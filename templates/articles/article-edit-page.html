@@ -6,21 +6,22 @@
     <body>
     <h2>Edit your articles below:</h2>
         <main>
-            <form method="post" action="{% url 'edit article' %}">
+{#            username=username pet_slug=pet_slug#}
+{#            <form method="post" action="{% url 'edit article' username=username article_slug=article_slug %}">#}
                 <article class="container">
                     <ol>
-                        <li class="title">
-                            <b>Article's Title:</b>
-                            {{ form.title|placeholder:'Title' }}
-                        </li>
-                        <li class="photo">
-                            <b>Link to image (optional):</b>
-                            {{ form.photo|placeholder:'Photo' }}
-                        </li>
-                        <li class="content">
-                            <b>Article's Content:</b>
-                            {{ form.content|placeholder:'Content' }}
-                        </li>
+{#                        <li class="title">#}
+{#                            <b>Article's Title:</b>#}
+{#                            {{ form.title|placeholder:'Title' }}#}
+{#                        </li>#}
+{#                        <li class="photo">#}
+{#                            <b>Link to image (optional):</b>#}
+{#                            {{ form.photo|placeholder:'Photo' }}#}
+{#                        </li>#}
+{#                        <li class="content">#}
+{#                            <b>Article's Content:</b>#}
+{#                            {{ form.content|placeholder:'Content' }}#}
+{#                        </li>#}
                         <li>
                             <button type="submit">Create</button>
                             {% csrf_token %}

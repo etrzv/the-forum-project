@@ -15,7 +15,8 @@ class ArticleCreateForm(forms.ModelForm):
         # }
 
         widgets = {
-            'content': forms.Textarea(attrs={'rows': 4, 'cols': 20})
+            'title': forms.Textarea(attrs={'rows': 1, 'cols': 20}),
+            'content': forms.Textarea(attrs={'rows': 4, 'cols': 20}),
         }
 
 

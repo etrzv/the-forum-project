@@ -1,12 +1,19 @@
 from django.urls import path, include
 
-from the_forum.articles.views import CreateArticleView, EditArticleView
+from the_forum.articles.views import ArticleCreateView, edit_article, article_details, ArticleDeleteView
 
 urlpatterns = (
-    path('add/', CreateArticleView.as_view(), name='add article'),
-    path('<str:email>/article/<slug:article_slug>/', include([
-        # path('', details_pet, name='details pet'),
-        path('edit/', EditArticleView.as_view(), name='edit article'),
-        # path('delete/', delete_pet, name='delete pet'),
+    path('add/', ArticleCreateView.as_view(), name='add article'),
+    # path('<str:username>/article/<slug:slug>/', include([
+    path('article/<slug:slug>/', include([
+        path('', article_details, name='details article'),
+        path('edit/', edit_article, name='edit article'),
+        path('delete/', ArticleDeleteView.as_view(), name='delete article'),
     ]))
 )
+
+# str - Matches any non-empty string, excluding the path separator, '/'.
+# This is the default if a converter isn’t included in the expression.
+
+# slug - Matches any slug string consisting of ASCII letters or numbers,
+# plus the hyphen and underscore characters. For example, building-your-1st-django-site.

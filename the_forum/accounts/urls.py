@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 
-from the_forum.accounts.views import SignUpView, SignInView, SignOutView, UserDetailsView, UserEditView, UserDeleteView
+from the_forum.accounts.views import SignUpView, SignInView, SignOutView, UserDetailsView, UserEditView, UserDeleteView, \
+    change_password_view
 
 urlpatterns = (
     path('register/', SignUpView.as_view(), name='register user'),
@@ -11,5 +12,6 @@ urlpatterns = (
         path('', UserDetailsView.as_view(), name='details user'),
         path('edit/', UserEditView.as_view(), name='edit user'),
         path('delete/', UserDeleteView.as_view(), name='delete user'),
+        path('passreset/', change_password_view, name='change password'),
     ])),
 )

@@ -1,8 +1,11 @@
 {% extends "base/base.html" %}
 {% block page_content %}
     <form method="post" action="{% url 'edit user' pk=object.pk %}">
-    {{ form }}
-    {% csrf_token %}
+       <h3>Edit Your profile here:</h3>
+        <p>{{ form.email }}</p>
+        <p>{{ form.password }}</p>
+        <a href="{% url 'change password' pk=request.user.pk %}">Change password here.</a>
+        {% csrf_token %}
         <button class="edit-btn" type="submit">Edit</button>
     </form>
 

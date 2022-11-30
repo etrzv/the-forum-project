@@ -7,15 +7,15 @@ body {
 body h2 {
     position: relative;
     display: inline-flex;
-    left: 50%;
+    left: 22%;
+    font-size: 30px;
 }
 
-
-main .container {
+body .container {
     position: relative;
     display: inline-flex;
-    left: 45%;
-    top: 10px;
+    left: 18%;
+    top: 90px;
 
     border: 2px solid black;
     border-radius: 5px;
@@ -27,6 +27,10 @@ main .container {
 main .container li {
     list-style: none;
     padding: 45px 10px 10px;
+    margin-top: 20px;
+
+    position: relative;
+    right: 50%;
 }
 
 main li b {

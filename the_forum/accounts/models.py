@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin, User
+from django.contrib.auth.models import PermissionsMixin, User, AbstractUser
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils import timezone
@@ -24,7 +24,6 @@ this information is needed only for the login:
 # django.core.exceptions.ImproperlyConfigured: AUTH_USER_MODEL refers to model 'accounts.AppUser'
 # that has not been installed
 # UserModel = get_user_model()
-
 
 class AppUser(AbstractBaseUser, PermissionsMixin):
     EMAIL_MAX_LEN = 15

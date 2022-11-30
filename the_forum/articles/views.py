@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView
@@ -47,7 +47,7 @@ from the_forum.articles.models import Article
 #     return render(request, 'articles/article-add-page.html', context)
 
 
-class CreateArticleView(LoginRequiredMixin, CreateView):
+class ArticleCreateView(LoginRequiredMixin, CreateView):
     model = Article
     template_name = 'articles/article-add-page.html'
     form_class = ArticleCreateForm  # used in Django Class Based to depict the Form to be used in the view
@@ -59,13 +59,71 @@ class CreateArticleView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class EditArticleView(UpdateView):
-    model = Article
-    template_name = 'articles/article-edit-page.html'
-    form_class = ArticleEditForm
+# class ArticleEditView(UpdateView):
+#     model = Article
+#     template_name = 'articles/article-edit-page.html'
+#     form_class = ArticleEditForm
+#
+#     def get_queryset(self):
+#         obj = get_object_or_404(
+#             Article,
+#             article__slug=self.kwargs['article_slug'])
+#         return obj
+#
+#     #         obj = get_object_or_404(Post, category__slug=self.kwargs['category_slug'],
+#                     slug=self.kwargs['post_slug'] )
+#     #         return obj
+#     def get_success_url(self):
+#         return reverse_lazy('edit article', kwargs={'pk': self.object.id})
 
-    def get_success_url(self):
-        return reverse_lazy('edit article', kwargs={'pk': self.object.id})
+
+def edit_article(request, username, article_slug):
+    # article = Article.objects.all()\
+    #     .filter(slug=article_slug, user__username=request.user.USERNAME_FIELD) \
+    #     .get()
+    #
+    # # if not is_owner(request, article):
+    # #     return redirect('details pet', username=username, pet_slug=pet_slug)
+    #
+    # if request.method == 'GET':
+    #     form = ArticleEditForm(instance=article)
+    # else:
+    #     form = ArticleEditForm(request.POST, instance=article)
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('show index', username=username, article_slug=article_slug)
+    #
+    # context = {
+    #     'form': form,
+    #     'article_slug': article_slug,
+    #     'username': username,
+    # }
+    #
+    # return render(
+    #     request,
+    #     'articles/article-edit-page.html',
+    #     context,
+    # )
+    pass
+
+
+# class ArticleDetailsView(LoginRequiredMixin, DetailView):
+#     model = Article
+#     template_name = 'articles/article-details-page.html'
+#
+#     def get_queryset(self):
+#         return super().get_queryset().filter(pk=Article.slug)
+
+
+def article_details(request, slug):
+    article = Article.objects.get(slug=slug)
+    # path('article/<slug:slug>/', include([
+    # = articles/article/1-witcher-3-ending/
+    return render(request, 'articles/article-edit-page.html', {'article': article})
+
+
+class ArticleDeleteView(LoginRequiredMixin, DetailView):
+    pass
 
 
 '''
