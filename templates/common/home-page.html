@@ -3,11 +3,6 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/common/home-page.css' %}" />
     <h3>
-    Welcome to your home page
-    <p>Email: {{ request.user.email }}</p>
-    <p>First Name: {{ request.user.first_name }}</p>
-        <p>Username: {{ request.user.username }}</p>
-        <p>My PK: {{ request.user.pk }}</p>
     {% for article in articles %}
 {#        TODO: #}
 {#        <a href="{% url 'edit article' username=request.user.email article_slug=article.slug %}">Edit Article</a>#}

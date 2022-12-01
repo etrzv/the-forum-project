@@ -48,6 +48,13 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     # creating a custom manager that is overridden here - from the UserManager base class
     objects = AppUserManager()
 
+    def get_profile(self):
+        return Profile.objects.get(user_id=self.pk)
+
+    def get_first_name(self):
+        profile = self.get_profile()
+        return profile.first_name
+
 
 class Profile(models.Model):
     FIRST_NAME_MIN_LEN = 2

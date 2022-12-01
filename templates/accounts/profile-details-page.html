@@ -4,27 +4,36 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/accounts/profile-details.css' %}" />
     <body>
-    <h2>What would you like to share today?</h2>
         <main>
+        <h2>My information</h2>
+            <p>Email: {{ user.email }}</p>
+            <p>First Name: {{ first_name }}</p>
+            <p>Username: {{ user.username }}</p>
+            <p>My PK: {{ user.pk }}</p>
             <form method="post" action="{% url 'add article' %}">
                 <article class="container">
+                    <h2>My Articles</h2>
                     <ol>
-{#                        <li class="title">#}
-{#                            <b>Article's Title:</b>#}
-{#                            {{ form.title|placeholder:'Title' }}#}
+                        {% for article in articles %}
+                            <li class="title">
+                            <b>Article's Title:</b>
+                                {{ article.title }}
+                            </li>
+                            {% if article.photo %}
+                                <li class="photo">
+                                    <b>Link to image:</b>
+                                    {{ article.photo }}
+                                </li>
+                            {% endif %}
+                            <li class="content">
+                                <b>Article's Content:</b>
+                                {{ article.content }}
+                            </li>
+{#                        <li>#}
+{#                            <button type="submit">Create</button>#}
+{#                            {% csrf_token %}#}
 {#                        </li>#}
-{#                        <li class="photo">#}
-{#                            <b>Link to image (optional):</b>#}
-{#                            {{ form.photo|placeholder:'Photo' }}#}
-{#                        </li>#}
-{#                        <li class="content">#}
-{#                            <b>Article's Content:</b>#}
-{#                            {{ form.content|placeholder:'Content' }}#}
-{#                        </li>#}
-                        <li>
-                            <button type="submit">Create</button>
-                            {% csrf_token %}
-                        </li>
+                        {% endfor %}
                     </ol>
                 </article>
             </form>

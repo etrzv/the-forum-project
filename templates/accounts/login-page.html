@@ -17,10 +17,12 @@
                         <ol>
                             <li class="uname">
                                 <b>Email:</b>
+{#                                {{ form.username.errors }}#}
                                 {{ form.username|placeholder:'Email' }}
                             </li>
                             <li class="pws">
                                 <b>Password:</b>
+{#                                {{ form.password.errors }}#}
                                 {{ form.password|placeholder:'Password' }}
                             </li>
                             <li>
