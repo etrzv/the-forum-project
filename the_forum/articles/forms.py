@@ -30,6 +30,17 @@ class ArticleEditForm(forms.ModelForm):
         }
 
 
+class ArticleDeleteForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = ()
+
+    def save(self, commit=True):
+        if commit:
+            self.instance.delete()
+        return self.instance
+
+
 '''
 from django import forms
 

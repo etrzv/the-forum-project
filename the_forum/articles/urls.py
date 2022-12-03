@@ -1,13 +1,13 @@
 from django.urls import path, include
 
-from the_forum.articles.views import ArticleCreateView, edit_article, article_details, ArticleDeleteView
+from the_forum.articles.views import ArticleCreateView, article_details, ArticleEditView, ArticleDeleteView
 
 urlpatterns = (
     path('add/', ArticleCreateView.as_view(), name='add article'),
     # path('<str:username>/article/<slug:slug>/', include([
     path('article/<slug:slug>/', include([
         path('', article_details, name='details article'),
-        path('edit/', edit_article, name='edit article'),
+        path('edit/', ArticleEditView.as_view(), name='edit article'),
         path('delete/', ArticleDeleteView.as_view(), name='delete article'),
     ]))
 )

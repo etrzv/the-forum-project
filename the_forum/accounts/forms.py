@@ -56,7 +56,7 @@ class UserEditForm(UserChangeForm):
         return self.initial["password"]
 
 
-class UserProfileForm(UserChangeForm):
+class UserProfileEditForm(UserChangeForm):
     class Meta:
         model = Profile
         fields = ('username', 'first_name', 'last_name', )
@@ -65,3 +65,27 @@ class UserProfileForm(UserChangeForm):
 class PasswordResetForm(PasswordChangeForm):
     class Meta:
         model = UserModel
+
+
+class UserDeleteForm(forms.ModelForm):
+    def save(self, commit=True):
+        # articles should remain after account deletion TODO: account author: Deleted
+        self.instance.delete()
+        return self.instance
+
+    class Meta:
+        model = UserModel
+        fields = ()
+
+#     def save(self, commit=True):
+#         pets = list(self.instance.pet_set.all())
+#         # the PetPhoto should be done with signals instead of coupling (import) - we break the abstraction
+#         # of the auth app
+#         PetPhoto.objects.filter(tagged_pets__in=pets).delete()
+#         self.instance.delete()
+#
+#         return self.instance
+#
+#     class Meta:
+#         model = Profile
+#         fields = ()

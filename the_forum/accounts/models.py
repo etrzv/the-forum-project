@@ -51,9 +51,13 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     def get_profile(self):
         return Profile.objects.get(user_id=self.pk)
 
-    def get_first_name(self):
+    # def get_first_name(self):
+    #     profile = self.get_profile()
+    #     return profile.first_name
+    #
+    def get_username(self):
         profile = self.get_profile()
-        return profile.first_name
+        return profile.username
 
 
 class Profile(models.Model):
@@ -96,7 +100,6 @@ class Profile(models.Model):
     )
 
     user = models.OneToOneField(
-        # TODO:
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         primary_key=True,

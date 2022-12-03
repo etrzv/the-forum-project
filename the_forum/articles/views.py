@@ -59,29 +59,36 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-# class ArticleEditView(UpdateView):
-#     model = Article
-#     template_name = 'articles/article-edit-page.html'
-#     form_class = ArticleEditForm
-#
-#     def get_queryset(self):
-#         obj = get_object_or_404(
-#             Article,
-#             article__slug=self.kwargs['article_slug'])
-#         return obj
-#
-#     #         obj = get_object_or_404(Post, category__slug=self.kwargs['category_slug'],
-#                     slug=self.kwargs['post_slug'] )
-#     #         return obj
-#     def get_success_url(self):
-#         return reverse_lazy('edit article', kwargs={'pk': self.object.id})
+class ArticleEditView(LoginRequiredMixin, UpdateView):
+    model = Article
+    template_name = 'articles/article-edit-page.html'
+    form_class = ArticleEditForm
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('edit article', kwargs={'slug': self.object.id})
 
 
-def edit_article(request, username, article_slug):
-    # article = Article.objects.all()\
-    #     .filter(slug=article_slug, user__username=request.user.USERNAME_FIELD) \
-    #     .get()
-    #
+'''    def get_queryset(self):
+        # This method is called by the default implementation of get_object() and
+        # may not be called if get_object() is overridden.
+        obj = get_object_or_404(
+            Article,
+            article_slug=self.kwargs['article_slug'])
+        return obj
+    
+        # obj = get_object_or_404(Post, category__slug=self.kwargs['category_slug'],slug=self.kwargs['post_slug'] )
+        # return obj
+    
+'''
+
+
+# def edit_article(request, username, article_slug):
+#     article = Article.objects.filter(slug=article_slug).get()
+
     # # if not is_owner(request, article):
     # #     return redirect('details pet', username=username, pet_slug=pet_slug)
     #
@@ -104,7 +111,6 @@ def edit_article(request, username, article_slug):
     #     'articles/article-edit-page.html',
     #     context,
     # )
-    pass
 
 
 # class ArticleDetailsView(LoginRequiredMixin, DetailView):
@@ -119,7 +125,7 @@ def article_details(request, slug):
     article = Article.objects.get(slug=slug)
     # path('article/<slug:slug>/', include([
     # = articles/article/1-witcher-3-ending/
-    return render(request, 'articles/article-edit-page.html', {'article': article})
+    return render(request, 'articles/article-details-page.html', {'article': article})
 
 
 class ArticleDeleteView(LoginRequiredMixin, DetailView):

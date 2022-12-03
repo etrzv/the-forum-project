@@ -7,7 +7,7 @@
         <main>
         <h2>My information</h2>
             <p>Email: {{ user.email }}</p>
-            <p>First Name: {{ first_name }}</p>
+            <p>First Name: {{ user.first_name }}</p>
             <p>Username: {{ user.username }}</p>
             <p>My PK: {{ user.pk }}</p>
             <form method="post" action="{% url 'add article' %}">

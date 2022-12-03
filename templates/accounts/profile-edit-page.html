@@ -11,6 +11,7 @@
         {% csrf_token %}
     </form>
     <a href="{% url 'change password' pk=request.user.pk %}">Change password here.</a>
+    <a href="{% url 'delete user' pk=request.user.pk %}">Delete your account here.</a>
 
 {% endblock %}
 

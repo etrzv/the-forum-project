@@ -23,6 +23,9 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['articles'] = Article.objects.all()
+        # TODO: should be with username
+        user = UserModel.objects.filter(id=self.request.user.pk).get()
+        context['username'] = user.get_username
         #     photo = Photo.objects.filter(pk=pk) \
         #         .get()
 
@@ -33,10 +36,6 @@ class HomeView(TemplateView):
         # TODO: how to connect the articles to the current user
 
         return context
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['hide_additional_nav_items'] = True
-    #     return context
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
@@ -61,10 +60,6 @@ def show_dashboard(request):
     return render(request, 'dashboard.html', context)
 
 
-def show_profile(request):
-    return render(request, 'profile_details.html')
-
-
 def show_pet_photo_details(request, pk):
     pet_photo = PetPhoto.objects\
         .prefetch_related('tagged_pets')\
@@ -84,23 +79,6 @@ def like_pet_photo(request, pk):
     pet_photo.save()
 
     return redirect('pet photo details', pk)
-    
-    
-def show_index(request):
-    if request.method == 'POST':
-        form = CreateProfileForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('show index')
-    else:
-        form = CreateProfileForm()
-
-    context = {
-        'form': form,
-        'profile': False,
-    }
-
-    return render(request, 'home-no-profile.html', context)
     
     
 # we have created a CBV from the function above

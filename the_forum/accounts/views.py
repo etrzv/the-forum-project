@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 from django.contrib.auth import update_session_auth_hash
-from the_forum.accounts.forms import UserCreateForm, UserEditForm, PasswordResetForm, UserProfileForm
+from the_forum.accounts.forms import UserCreateForm, UserEditForm, PasswordResetForm, UserProfileEditForm, UserDeleteForm
 from the_forum.articles.models import Article
 
 '''
@@ -62,12 +62,10 @@ class UserDetailsView(DetailView):
         #                                              self.object is a Profile
         articles = list(Article.objects.filter(user_id=self.object.pk))
         user = UserModel.objects.filter(id=self.request.user.pk).get()
-        first_name = user.get_first_name()
+
         context.update({
             'articles': articles,
             'user': user,
-            'first_name': first_name,
-
         })
 
         return context
@@ -118,9 +116,10 @@ class UserEditView(UpdateView):
 
     def get_context_data(self, *args, **kwargs):
         # user = UserModel.objects.filter(id=self.request.user.pk).get()
-        user_profile = UserProfileForm(instance=self.request.user)  # / self.request.user.pk
-        user_form = UserEditForm(instance=self.request.user.pk)
-        # user_profile_form = UserProfileForm(instance=self.request.user.pk)
+        user_profile = UserProfileEditForm  # / instance=self.request.user.pk
+
+        user_form = UserEditForm
+        # user_profile_form = UserProfileEditForm(instance=self.request.user.pk)
 
         context = super().get_context_data(**kwargs)
         context.update({
@@ -136,13 +135,8 @@ class UserDeleteView(DeleteView):
     template_name = 'accounts/profile-delete-page.html'
     model = UserModel
     success_url = reverse_lazy('show index')
+    form_class = UserDeleteForm
 
-
-def article_details(request, slug):
-    article = Article.objects.get(slug=slug)
-    #     # path('article/<slug:slug>/', include([
-    #     # = articles/article/1-witcher-3-ending/
-    return render(request, 'articles/article-edit-page.html', {'article': article})
 
 
 ''' 
@@ -237,10 +231,10 @@ UserForm():
     model = User
     fields = ()
 
-UserProfileForm():
+UserProfileEditForm():
     model = UserProfile 
 
 def edit_profile(self, request):
     user_form = UserForm(instance=request.user)
-    user_profile_form = UserProfileForm(instance=request.user.userprofile)
+    user_profile_form = UserProfileEditForm(instance=request.user.userprofile)
 '''
