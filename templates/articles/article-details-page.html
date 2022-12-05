@@ -95,8 +95,10 @@
         </article>
         <div class="add_comment_box">
           <!-- Start Add Comments Form -->
-          <form method="post" action="#">
+          <form method="post" action="{% url 'comment article' article_id=article.id %}">
             <label for="id_body"></label>
+{#              {{ form }}#}
+{#              {% csrf_token %}#}
             <textarea
               name="body"
               cols="138"
@@ -111,14 +113,11 @@
           </form>
         </div>
         <div class="comments_box">
-          <div class="profile_image">P.P.</div>
-          <div class="username">Username1</div>
-          <div class="">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Explicabo
-            nihil molestias eos suscipit sequi magni dignissimos praesentium
-            earum error quo excepturi atque dolorem alias id omnis nemo, numquam
-            facere doloremque!
-          </div>
+            {% for comment in comments %}
+                <div class="profile_image"></div>
+                <div class="username"></div>
+                <div class="content">comment.text</div>
+            {% endfor %}
         </div>
       </main>
 {% endblock %}

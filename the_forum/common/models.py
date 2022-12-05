@@ -49,3 +49,31 @@ class ArticleLike(models.Model):
         UserModel,
         on_delete=models.RESTRICT,
     )
+
+
+class ArticleDislike(models.Model):
+    article = models.ForeignKey(
+        Article,
+        on_delete=models.RESTRICT,
+        null=False,
+        blank=True,
+    )
+
+    user = models.ForeignKey(
+        UserModel,
+        on_delete=models.RESTRICT,
+    )
+
+
+# class ArticleBookmark(models.Model):
+#     article = models.ForeignKey(
+#         Article,
+#         on_delete=models.RESTRICT,
+#         null=False,
+#         blank=True,
+#     )
+#
+#     user = models.ForeignKey(
+#         UserModel,
+#         on_delete=models.RESTRICT,
+#     )

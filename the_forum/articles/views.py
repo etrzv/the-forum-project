@@ -125,7 +125,13 @@ def article_details(request, slug):
     article = Article.objects.get(slug=slug)
     # path('article/<slug:slug>/', include([
     # = articles/article/1-witcher-3-ending/
-    return render(request, 'articles/article-details-page.html', {'article': article})
+
+    # comments = article.objects.filter(id=slug)
+    context = {
+        'article': article,
+        # 'comments': comments,
+    }
+    return render(request, 'articles/article-details-page.html', context)
 
 
 class ArticleDeleteView(LoginRequiredMixin, DetailView):
@@ -174,19 +180,4 @@ class EditPetPhotoView(UpdateView):
     def get_success_url(self):
         return reverse_lazy('edit pet photo', kwargs= {'pk': self.object.id})
 
-
-def like_pet_photo(request, pk):
-    # like the pet with the pk
-    pet_photo = PetPhoto.objects.get(pk=pk)
-    pet_photo.likes += 1
-    pet_photo.save()
-    return redirect('pet photo details', pk)
-
-
-# def create_pet_photo(request):
-#     return render(request, 'main/photo_create.html')
-
-
-# def edit_pet_photo(request):
-#     return render(request, 'main/photo_edit.html')
 '''

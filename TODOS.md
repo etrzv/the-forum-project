@@ -36,3 +36,15 @@ Done:
         - accounts - DONE
     - Admin: 
         - basic admin without functionality
+
+
+
+TODO: 
+- edit profile - settings 
+- change password
+- profile - My articles + shared articles 
+
+- add article
+- article details 
+
+- profile picture 
