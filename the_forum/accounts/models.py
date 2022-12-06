@@ -48,16 +48,17 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     # creating a custom manager that is overridden here - from the UserManager base class
     objects = AppUserManager()
 
-    def get_profile(self):
-        return Profile.objects.get(user_id=self.pk)
-
+    # TODO: does not work when registering
+    # def get_profile(self):
+    #     return Profile.objects.get(user_id=self.pk)
+    #
     # def get_first_name(self):
     #     profile = self.get_profile()
     #     return profile.first_name
     #
-    def get_username(self):
-        profile = self.get_profile()
-        return profile.username
+    # def get_username(self):
+    #     profile = self.get_profile()
+    #     return profile.username
 
 
 class Profile(models.Model):
@@ -89,8 +90,8 @@ class Profile(models.Model):
 
     username = models.CharField(
         max_length=USERNAME_MAX_LEN,
-        null=True,
-        blank=True,
+        null=False,
+        blank=False,
     )
 
     profile_image = models.ImageField(

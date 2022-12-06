@@ -3,9 +3,11 @@ from django.contrib.auth import get_user_model, login
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
+from django.views import generic as views
+
 from django.contrib.auth import update_session_auth_hash
 from the_forum.accounts.forms import UserCreateForm, UserEditForm, PasswordResetForm, UserProfileEditForm, UserDeleteForm
+from the_forum.accounts.models import Profile
 from the_forum.articles.models import Article
 
 '''
@@ -19,7 +21,7 @@ then looks at the request and decides whether the GET or POST method of the view
 UserModel = get_user_model()
 
 
-class SignUpView(CreateView):
+class SignUpView(views.CreateView):
     template_name = 'accounts/register-page.html'
     form_class = UserCreateForm
     success_url = reverse_lazy('show index')
@@ -34,6 +36,11 @@ class SignUpView(CreateView):
     #         form.instance.user = self.request.user
     #         return super().form_valid(form)
 
+    #     def post(self, request, *args, **kwargs):
+    #         response = super().post(request, *args, **kwargs)
+    #         login(request, self.object)
+    #         return response
+
 
 # LoginView -> form_class = AuthenticationForm -> username / password
 class SignInView(LoginView):
@@ -45,7 +52,7 @@ class SignOutView(LogoutView):
     next_page = reverse_lazy('show index')
 
 
-class UserDetailsView(DetailView):
+class UserDetailsView(views.DetailView):
     """
     Render a "detail" view of an object.
     By default, this is a model instance looked up from `self.queryset`, but the
@@ -61,11 +68,13 @@ class UserDetailsView(DetailView):
         context = super().get_context_data(**kwargs)
         #                                              self.object is a Profile
         articles = list(Article.objects.filter(user_id=self.object.pk))
-        user = UserModel.objects.filter(id=self.request.user.pk).get()
+        user = UserModel.objects.get(id=self.request.user.pk)
+        user_profile = Profile.objects.get(user_id=self.request.user.pk)
 
         context.update({
             'articles': articles,
             'user': user,
+            'user_profile': user_profile,
         })
 
         return context
@@ -99,11 +108,15 @@ class UserDetailsView(DetailView):
 #         return context
 
 
-class UserEditView(UpdateView):
+class UserEditView(views.UpdateView):
     template_name = 'accounts/profile-edit-page.html'
     model = UserModel
-    fields = ('email', 'is_active', )
-    # form_class = UserEditForm
+    # NEW
+    second_model = Profile
+    # fields = ('email', )
+    form_class = UserEditForm
+    # NEW
+    second_form_class = UserProfileEditForm
 
     # TODO: edit with the form or use the model?
     # from - ModelFormMixin
@@ -113,12 +126,22 @@ class UserEditView(UpdateView):
         return reverse_lazy('edit user', kwargs={
             'pk': self.request.user.pk,
         })
+    # ProcessFormView
+    """Handle GET requests: instantiate a blank version of the form."""
+
+    """
+    Handle POST requests: instantiate a form instance with the passed
+    POST variables and then check if it's valid.
+    """
 
     def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.model.objects.get(id=self.request.user.pk)
+        profile = self.second_model.objects.get(user_id=user.pk)
+        '''
         # user = UserModel.objects.filter(id=self.request.user.pk).get()
-        user_profile = UserProfileEditForm  # / instance=self.request.user.pk
-
-        user_form = UserEditForm
+        user_profile = UserProfileEditForm(instance=self.request.user)  # / instance=self.request.user.pk
+        user_form = UserEditForm(instance=self.request.user)
         # user_profile_form = UserProfileEditForm(instance=self.request.user.pk)
 
         context = super().get_context_data(**kwargs)
@@ -128,10 +151,28 @@ class UserEditView(UpdateView):
             'user_form': user_form,
             # 'user_profile_form': user_profile_form,
         })
+        return context'''
+
+        context.update({
+            'form_class': self.form_class(instance=user),
+            'second_form_class': self.second_form_class(instance=profile)
+        })
+        # context['form_class'] = self.form_class(instance=user)
+        # context['second_form_class'] = self.second_form_class(instance=profile)
         return context
 
+    def post(self, request, *args, **kwargs):
+        user = self.model.objects.get(id=self.request.user.pk)
+        profile = self.second_model.objects.get(user_id=user.pk)
+        form = self.form_class(request.POST, instance=user)
+        second_form = self.form_class(request.POST, instance=profile)
+        if form.is_valid() and second_form.is_valid():
+            form.save()
+            second_form.save()
+            return redirect(self.get_success_url())
 
-class UserDeleteView(DeleteView):
+
+class UserDeleteView(views.DeleteView):
     template_name = 'accounts/profile-delete-page.html'
     model = UserModel
     success_url = reverse_lazy('show index')

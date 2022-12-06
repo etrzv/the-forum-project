@@ -2,11 +2,13 @@
 {% block page_content %}
 {% load placeholders %}
     <form method="post" action="{% url 'edit user' pk=request.user.pk %}">
-       <h3>Edit Your profile here:</h3>
-        <p>Email: {{ user_form.email }}</p>
-        <p>Username: {{ user_profile.username }}</p>
-        <p>First Name: {{ user_profile.first_name }}</p>
-        <p>Last Name: {{ user_profile.last_name }}</p>
+        <h3>Edit Your profile here:</h3>
+{#        {% for field in form %}#}
+            <p>Email: {{ form_class.email }}</p>
+            <p>Username: {{ second_form_class.username }}</p>
+            <p>First Name: {{ second_form_class.first_name }}</p>
+            <p>Last Name: {{ second_form_class.last_name }}</p>
+{#        {% endfor %}#}
         <button class="edit-btn" type="submit">Edit</button>
         {% csrf_token %}
     </form>

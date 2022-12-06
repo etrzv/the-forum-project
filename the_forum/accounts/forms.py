@@ -11,6 +11,8 @@ UserModel = get_user_model()
 class UserCreateForm(UserCreationForm):
     first_name = forms.CharField()
     last_name = forms.CharField()
+    username = forms.CharField()
+
     # class UserCreateForm(auth_forms.UserCreationForm):
     #     class Meta:
     #         model = UserModel
@@ -29,9 +31,11 @@ class UserCreateForm(UserCreationForm):
         user = super(UserCreateForm, self).save(commit=commit)
         first_name = self.cleaned_data['first_name']
         last_name = self.cleaned_data['last_name']
+        username = self.cleaned_data['username']
         profile = Profile(
             first_name=first_name,
             last_name=last_name,
+            username=username,
             user=user,
         )
 
@@ -48,12 +52,15 @@ class UserEditForm(UserChangeForm):
         model = UserModel
         fields = ('email', )
         exclude = ('password', )
+        field_classes = {
+            'email': auth_forms.UsernameField,
+        }
 
-    def clean_password(self):
-        # Regardless of what the user provides, return the initial value.
-        # This is done here, rather than on the field, because the
-        # field does not have access to the initial value
-        return self.initial["password"]
+    # def clean_password(self):
+    #     # Regardless of what the user provides, return the initial value.
+    #     # This is done here, rather than on the field, because the
+    #     # field does not have access to the initial value
+    #     return self.initial["password"]
 
 
 class UserProfileEditForm(UserChangeForm):

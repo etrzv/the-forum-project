@@ -46,5 +46,13 @@ TODO:
 
 - add article
 - article details 
+- search forms 
 
 - profile picture 
+
+- Login and Registration HTML / CSS: 
+  - center the boxes 
+  - put the welcome inside them 
+
+
+- Sharing - asks are you sure? -> shares it in your profile page 

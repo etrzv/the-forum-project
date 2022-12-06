@@ -5,7 +5,8 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView
 
-from the_forum.articles.forms import ArticleCreateForm, ArticleEditForm
+from core.utils import apply_likes_count, apply_dislikes_count
+from the_forum.articles.forms import ArticleCreateForm, ArticleEditForm, ArticleDeleteForm
 from the_forum.articles.models import Article
 
 
@@ -68,11 +69,17 @@ class ArticleEditView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         return context
 
+    # TODO: check
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
     def get_success_url(self):
         return reverse_lazy('edit article', kwargs={'slug': self.object.id})
 
 
-'''    def get_queryset(self):
+'''    
+def get_queryset(self):
         # This method is called by the default implementation of get_object() and
         # may not be called if get_object() is overridden.
         obj = get_object_or_404(
@@ -113,29 +120,45 @@ class ArticleEditView(LoginRequiredMixin, UpdateView):
     # )
 
 
-# class ArticleDetailsView(LoginRequiredMixin, DetailView):
-#     model = Article
-#     template_name = 'articles/article-details-page.html'
+class ArticleDetailsView(LoginRequiredMixin, DetailView):
+    model = Article
+    template_name = 'articles/article-details-page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        article = Article.objects.filter().get()
+        likes = [apply_likes_count(article)]
+        dislikes = [apply_dislikes_count(article)]
+        # comments = article.objects.all(comment_id=article.id)
+        context.update({
+            'article': article,
+            'likes': likes,
+            'dislikes': dislikes,
+            'is_owner': article.user == self.request.user,
+            # 'comments': comments,
+        })
+
+        return context
+
+
+# def article_details(request, slug):
+#     article = Article.objects.get(slug=slug)
+#     # path('article/<slug:slug>/', include([
+#     # = articles/article/1-witcher-3-ending/
 #
-#     def get_queryset(self):
-#         return super().get_queryset().filter(pk=Article.slug)
-
-
-def article_details(request, slug):
-    article = Article.objects.get(slug=slug)
-    # path('article/<slug:slug>/', include([
-    # = articles/article/1-witcher-3-ending/
-
-    # comments = article.objects.filter(id=slug)
-    context = {
-        'article': article,
-        # 'comments': comments,
-    }
-    return render(request, 'articles/article-details-page.html', context)
+#     # comments = article.objects.filter(id=slug)
+#     context = {
+#         'article': article,
+#         # 'comments': comments,
+#     }
+#     return render(request, 'articles/article-details-page.html', context)
 
 
 class ArticleDeleteView(LoginRequiredMixin, DetailView):
-    pass
+    template_name = 'articles/article-delete-page.html'
+    model = Article
+    success_url = reverse_lazy('show index')
+    form_class = ArticleDeleteForm
 
 
 '''

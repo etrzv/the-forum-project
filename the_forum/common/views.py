@@ -10,22 +10,46 @@ from core.utils import apply_likes_count, apply_dislikes_count
 from the_forum.accounts.forms import UserCreateForm
 from the_forum.articles.models import Article
 from the_forum.articles.utils import get_article_url
-from the_forum.common.forms import ArticleCommentForm
+from the_forum.common.forms import ArticleCommentForm, SearchArticleForm
 from the_forum.common.models import ArticleLike, ArticleDislike
 
-''' 
-1. index 
-2. like_article 
-3. dislike_article 
-3. share_article 
-4. comment_article 
-'''
+
 UserModel = get_user_model()
 
 
-class HomeView(TemplateView):
+def index(request):
+    search_form = SearchArticleForm(request.GET)
+    search_pattern = None
+
+    if search_form.is_valid():
+        search_pattern = search_form.cleaned_data['title']
+
+    articles = Article.objects.all()
+
+    if search_pattern:
+        articles = articles.filter(title__in=search_pattern)
+
+    likes = [apply_likes_count(article) for article in articles]
+    dislikes = [apply_dislikes_count(article) for article in articles]
+    # photos = [apply_user_liked_photo(photo) for photo in photos]
+    # print(articles)
+    context = {
+        'articles': articles,
+        'comment_form': ArticleCommentForm(),
+        'search_form': search_form,
+    }
+
+    return render(
+        request,
+        'common/home-page.html',
+        context,
+    )
+
+
+'''class HomeView(TemplateView):
     # TODO: should it redirect there
     template_name = 'common/home-page.html'
+    form_class = SearchArticleForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -63,7 +87,7 @@ class HomeView(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect('login user')
-        return super().dispatch(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)'''
 
 # def details_photo(request, pk):
 #     photo = Photo.objects.filter(pk=pk) \
@@ -150,10 +174,10 @@ def comment_article(request, article_id):
         comment.article = article
         comment.save()
 
-    context = {
-        'form': form,
-    }
-    return render(request, 'articles/article-details-page.html', context)
+    # context = {
+    #     'form': form,
+    # }
+    return redirect('show index')
 
     # return redirect(get_article_url(request, article_id))
 
@@ -193,8 +217,6 @@ def comment_article(request, article_id):
 #         comment = form.save(commit=False)  # Does not persist to DB
 #         comment.photo = photo
 #         comment.save()
-#
-#     return redirect('index')
 
 
 
@@ -235,25 +257,4 @@ def like_pet_photo(request, pk):
     pet_photo.save()
 
     return redirect('pet photo details', pk)
-    
-    
-# we have created a CBV from the function above
-class HomeView(RedirectToDashboard, TemplateView):
-    template_name = 'main/home_page.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['hide_additional_nav_items'] = True
-        return context
-        
-        
-class DashboardView(ListView):
-    model = Game
-    template_name = 'common/dashboard.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        hide_additional_fields = False
-        context['games'] = Game.objects.all()
-        return context
 '''

@@ -5,37 +5,42 @@
 
     <link rel="stylesheet" href="{% static 'css/accounts/login.css' %}" />
         <body>
-            <main>
-                <div class="welcome">
-                    <h2>Welcome</h2>
-                </div>
-                <div class="to">
-                    <h2>to The Forum</h2>
-                </div>
-                <form method="post" action="{% url 'login user' %}">
-                    <div class="container">
-                        <ol>
-                            <li class="uname">
-                                <b>Email:</b>
-{#                                {{ form.username.errors }}#}
-                                {{ form.username|placeholder:'Email' }}
-                            </li>
-                            <li class="pws">
-                                <b>Password:</b>
-{#                                {{ form.password.errors }}#}
-                                {{ form.password|placeholder:'Password' }}
-                            </li>
-                            <li>
-                                <button type="submit">Login</button>
-                                {% csrf_token %}
-                            </li>
-                        </ol>
+        <main>
+            <form method="post" action="{% url 'login user' %}">
+                <div class="container">
+                    <div class="welcome">
+                        <h2>Welcome to</h2>
                     </div>
-                </form>
-                <div class="second-option">
-                    <p>Don't have an account? <a href="{% url 'register user' %}">Register</a></p>
+                    <div class="to">
+                        <h2>The Forum</h2>
+                    </div>
+                    <ol>
+                        <li class="uname">
+                            <b>Email:</b>
+                            {{ form.username.errors }}
+                            <div class="box">{{ form.username|placeholder:'Email' }}</div>
+                        </li>
+                        <li class="pws">
+                            <b>Password: </b>
+                            {{ form.password.errors }}
+                            <div class="box">{{ form.password|placeholder:'Password' }}</div>
+                        </li>
+                        <li>
+                            <input type="hidden" name="next" value="{{ next }}">
+                            <button type="submit">Login</button>
+                            {% csrf_token %}
+                        </li>
+                        <li>
+                            <div class="second-option">
+                                <p>Don't have an account? <a href="{% url 'register user' %}"> Register </a></p>
+                            </div>
+                        </li>
+                    </ol>
+
                 </div>
-            </main>
+            </form>
+
+        </main>
         </body>
 
 {% endblock %}
