@@ -4,7 +4,6 @@ from the_forum.articles.views import ArticleCreateView, ArticleDetailsView, Arti
 
 urlpatterns = (
     path('add/', ArticleCreateView.as_view(), name='add article'),
-    # path('<str:username>/article/<slug:slug>/', include([
     path('article/<slug:slug>/', include([
         path('', ArticleDetailsView.as_view(), name='details article'),
         path('edit/', ArticleEditView.as_view(), name='edit article'),

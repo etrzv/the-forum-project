@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
@@ -46,6 +47,9 @@ from the_forum.articles.models import Article
 #     }
 #
 #     return render(request, 'articles/article-add-page.html', context)
+
+
+UserModel = get_user_model()
 
 
 class ArticleCreateView(LoginRequiredMixin, CreateView):
@@ -120,6 +124,24 @@ def get_queryset(self):
     # )
 
 
+# def details_photo(request, pk):
+#     photo = Photo.objects.filter(pk=pk) \
+#         .get()
+#
+#     user_like_photos = Photo.objects.filter(pk=pk, user_id=request.user.pk)
+#
+#     context = {
+#         'photo': photo,
+#         'has_user_liked_photo': user_like_photos,
+#         'likes_count': photo.photolike_set.count(),
+#         'is_owner': request.user == photo.user,
+#     }
+#
+#     return render(
+#         request,
+#         'photos/photo-details-page.html',
+#         context,
+#     )
 class ArticleDetailsView(LoginRequiredMixin, DetailView):
     model = Article
     template_name = 'articles/article-details-page.html'
@@ -129,12 +151,16 @@ class ArticleDetailsView(LoginRequiredMixin, DetailView):
         article = Article.objects.filter().get()
         likes = [apply_likes_count(article)]
         dislikes = [apply_dislikes_count(article)]
+        # user_likes_articles = Article.objects.filter(pk=self.object.pk, user_id=self.request.user.pk)
+        # user = UserModel.objects.get(id=self.request.user.pk)
         # comments = article.objects.all(comment_id=article.id)
         context.update({
             'article': article,
             'likes': likes,
             'dislikes': dislikes,
             'is_owner': article.user == self.request.user,
+            # 'has_user_liked_photo': user_likes_articles,
+            # 'user': user,
             # 'comments': comments,
         })
 

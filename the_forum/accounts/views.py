@@ -9,6 +9,7 @@ from django.contrib.auth import update_session_auth_hash
 from the_forum.accounts.forms import UserCreateForm, UserEditForm, PasswordResetForm, UserProfileEditForm, UserDeleteForm
 from the_forum.accounts.models import Profile
 from the_forum.articles.models import Article
+from the_forum.common.models import ArticleBookmark
 
 '''
 When a request url matches a url in your urls.py file, django passes that request to the view you specified. 
@@ -70,15 +71,19 @@ class UserDetailsView(views.DetailView):
         articles = list(Article.objects.filter(user_id=self.object.pk))
         user = UserModel.objects.get(id=self.request.user.pk)
         user_profile = Profile.objects.get(user_id=self.request.user.pk)
-
+        # Photo's field for likes is named `{NAME_OF_THIS_MODEL.lower()}_set`
+        # using APIs we can access related objects
+        bookmarked_articles = self.object.article_set.prefetch_related('articlebookmark_set')
         context.update({
             'articles': articles,
             'user': user,
             'user_profile': user_profile,
+            'bookmarked_articles': bookmarked_articles,
         })
 
         return context
-
+#         photos = self.object.photo_set \
+#             .prefetch_related('photolike_set')
 
 # model = Profile
 #     template_name = 'main/../../templates/accounts/profile_details.html'

@@ -11,8 +11,7 @@ from the_forum.accounts.forms import UserCreateForm
 from the_forum.articles.models import Article
 from the_forum.articles.utils import get_article_url
 from the_forum.common.forms import ArticleCommentForm, SearchArticleForm
-from the_forum.common.models import ArticleLike, ArticleDislike
-
+from the_forum.common.models import ArticleLike, ArticleDislike, ArticleBookmark
 
 UserModel = get_user_model()
 
@@ -27,16 +26,18 @@ def index(request):
     articles = Article.objects.all()
 
     if search_pattern:
-        articles = articles.filter(title__in=search_pattern)
+        articles = articles.filter(title__contains=search_pattern).order_by('date_created')
 
-    likes = [apply_likes_count(article) for article in articles]
-    dislikes = [apply_dislikes_count(article) for article in articles]
+    # likes = [apply_likes_count(article) for article in articles]
+    # dislikes = [apply_dislikes_count(article) for article in articles]
+    # user = UserModel.objects.get(pk=request.user.pk)
     # photos = [apply_user_liked_photo(photo) for photo in photos]
     # print(articles)
     context = {
         'articles': articles,
         'comment_form': ArticleCommentForm(),
         'search_form': search_form,
+        # 'user': user,
     }
 
     return render(
@@ -130,11 +131,16 @@ def like_article(request, article_id):
     # articles have - id, slug, user_id fields
     #                                         accepts field names as kwargs
     user_liked_articles = ArticleLike.objects.filter(article_id=article_id, user_id=request.user.pk)
+    user_disliked_articles = ArticleDislike.objects.filter(article_id=article_id, user_id=request.user.pk)
 
     if user_liked_articles:
         user_liked_articles.delete()
+    elif user_disliked_articles:
+        user_disliked_articles.delete()
+        ArticleLike.objects.create(article_id=article_id, user_id=request.user.pk)
     else:
         ArticleLike.objects.create(article_id=article_id, user_id=request.user.pk)
+
     # A dictionary containing all available HTTP headers. Available headers depend on the client and server
     return redirect(get_article_url(request, article_id))
 
@@ -144,9 +150,13 @@ def dislike_article(request, article_id):
     # articles have - id, slug, user_id fields
     #                                         accepts field names as kwargs
     user_disliked_articles = ArticleDislike.objects.filter(article_id=article_id, user_id=request.user.pk)
+    user_liked_articles = ArticleLike.objects.filter(article_id=article_id, user_id=request.user.pk)
 
     if user_disliked_articles:
         user_disliked_articles.delete()
+    elif user_liked_articles:
+        user_liked_articles.delete()
+        ArticleDislike.objects.create(article_id=article_id, user_id=request.user.pk)
     else:
         ArticleDislike.objects.create(article_id=article_id, user_id=request.user.pk)
     # A dictionary containing all available HTTP headers. Available headers depend on the client and server
@@ -155,35 +165,47 @@ def dislike_article(request, article_id):
 
 @login_required
 def share_article(request, article_id):
-    pass
-    # article_details_url = reverse('details article', kwargs={
-    #     'pk': article_id
-    # })
-    # pyperclip.copy(article_details_url)
+    article_details_url = reverse('details article', kwargs={
+        'pk': article_id
+    })
+    pyperclip.copy(article_details_url)
+    return redirect(get_article_url(request, article_id))
+
+
+@login_required
+def comment_article(request, article_id, user_id):
+    article = Article.objects.get(pk=article_id)
+    user = UserModel.objects.get(pk=user_id)
+
+    if request.method == 'POST':
+        form = ArticleCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)  # Does not persist to DB
+            comment.article = article
+            comment.user = user
+            comment.save()
+    else:
+        form = ArticleCommentForm()
+
+    context = {
+        'form': form,
+        'article': article,
+        # 'comment': comment,
+    }
+    return render(request, 'articles/article-details-page.html', context)
+
     # return redirect(get_article_url(request, article_id))
 
 
 @login_required
-def comment_article(request, article_id):
-    article = Article.objects.filter(pk=article_id).get()
+def bookmark_article(request, article_id):
+    user_bookmarked_articles = ArticleBookmark.objects.filter(article_id=article_id, user_id=request.user.pk)
 
-    form = ArticleCommentForm(request.POST)
-
-    if form.is_valid():
-        comment = form.save(commit=True)  # Does not persist to DB
-        comment.article = article
-        comment.save()
-
-    # context = {
-    #     'form': form,
-    # }
-    return redirect('show index')
-
-    # return redirect(get_article_url(request, article_id))
-
-# @login_required
-# def share_article(request, article_id):
-#     article_details_url = reverse('')
+    if user_bookmarked_articles:
+        user_bookmarked_articles.delete()
+    else:
+        ArticleBookmark.objects.create(article_id=article_id, user_id=request.user.pk)
+    return redirect(get_article_url(request, article_id))
 
 
 # @login_required

@@ -11,7 +11,7 @@
             ></a
           >
           <div class="article_box_meta">
-            <a href="{% url 'details user' pk=request.user.pk %}" class="article_box_author_link">Username</a>
+            <a href="{% url 'details user' pk=request.user.pk %}" class="article_box_author_link">{{ user.username }}</a>
             <time class="article_box_time">{{ article.date_created }}</time>
           </div>
           <div class="article_box_content">
@@ -97,28 +97,28 @@
               <i class="fa-regular fa-bookmark"></i>
             </div>
           </div>
-            {% if is_owner %}
-                Owner
-            {% else %}
-                Not owner
-            {% endif %}
+{#            {% if is_owner %}#}
+{#                Owner#}
+{#            {% else %}#}
+{#                Not owner#}
+{#            {% endif %}#}
         </article>
         <div class="add_comment_box">
           <!-- Start Add Comments Form -->
-          <form method="post" action="{% url 'comment article' article_id=article.id %}">
-{#              {{ form }}#}
+          <form method="post" action="{% url 'comment article' article_id=article.id user_id=request.user.pk %}">
+              {{ form }}
               {% csrf_token %}
-            <label for="id_body"></label>
-
-            <textarea
-              name="body"
-              cols="138"
-              rows="10"
-              placeholder="Add comment..."
-              maxlength="300"
-              required=""
-              id="id_body"
-            ></textarea>
+{#            <label for="id_body"></label>#}
+{##}
+{#            <textarea#}
+{#              name="body"#}
+{#              cols="138"#}
+{#              rows="10"#}
+{#              placeholder="Add comment..."#}
+{#              maxlength="300"#}
+{#              required=""#}
+{#              id="id_body"#}
+{#            ></textarea>#}
             <!-- Post Comments Button -->
             <button type="submit">Comment</button>
           </form>
