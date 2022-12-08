@@ -5,37 +5,34 @@
     <link rel="stylesheet" href="{% static 'css/accounts/profile-details.css' %}" />
     <body>
         <main>
-        <h2>My information</h2>
-            <p>Email: {{ user.email }}</p>
-            <p>First Name: {{ user_profile.first_name }}</p>
-            <p>Last Name: {{ user_profile.last_name }}</p>
-            <p>Username: {{ user_profile.username }}</p>
-            <p>User PK: {{ user.pk }}</p>
-            <p>UserProfile: {{ user_profile.pk }}</p>
+            <div class="info_box">
+                <h2>Profile Information</h2>
+                <ol>
+                    <li> Email: {{ user.email }}</li>
+                    <li>First Name: {{ user_profile.first_name }}</li>
+                    <li>Last Name: {{ user_profile.last_name }}</li>
+                    <li>Username: {{ user_profile.username }}</li>
+                </ol>
+            </div>
             <form method="post" action="{% url 'add article' %}">
-                <article class="container">
-                    <h2>My Articles</h2>
+                <div class="created_articles">
+                    <h2>Profile Articles</h2>
                     <ol>
-                    <h3>Created articles:</h3>
+                        <h3>Created articles:</h3>
                         {% for article in articles %}
-                            <li class="title">
-                            <b>Article's Title:</b>
-                                {{ article.title }}
-                            </li>
-                            {% if article.photo %}
-                                <li class="photo">
-                                    <b>Link to image:</b>
-                                    {{ article.photo }}
+                            <ol>
+                            <li>{{ article.title }}</li>
+                                {% if article.photo %}
+                                    <li class="photo">
+                                        <b>Link to image:</b>
+                                        {{ article.photo }}
+                                    </li>
+                                {% endif %}
+                                <li class="content">
+                                    <b>Article's Content:</b>
+                                    {{ article.content }}
                                 </li>
-                            {% endif %}
-                            <li class="content">
-                                <b>Article's Content:</b>
-                                {{ article.content }}
-                            </li>
-{#                        <li>#}
-{#                            <button type="submit">Create</button>#}
-{#                            {% csrf_token %}#}
-{#                        </li>#}
+                            </ol>
                         {% endfor %}
                     </ol>
                     <ol>
@@ -59,7 +56,7 @@
                     </ol>
                     <button type="submit">Create</button>
                     {% csrf_token %}
-                </article>
+                </div>
             </form>
         </main>
     </body>

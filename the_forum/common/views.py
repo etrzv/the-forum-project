@@ -19,23 +19,26 @@ UserModel = get_user_model()
 def index(request):
     search_form = SearchArticleForm(request.GET)
     search_pattern = None
+    user = request.user.pk
+
+    if not user:
+        return redirect('login user')
 
     if search_form.is_valid():
         search_pattern = search_form.cleaned_data['title']
 
-    articles = Article.objects.all()
+    articles = Article.objects.all().order_by('-date_created')
 
     if search_pattern:
-        articles = articles.filter(title__contains=search_pattern).order_by('date_created')
+        articles = articles.filter(title__contains=search_pattern).order_by('-date_created')
 
     # likes = [apply_likes_count(article) for article in articles]
     # dislikes = [apply_dislikes_count(article) for article in articles]
     # user = UserModel.objects.get(pk=request.user.pk)
     # photos = [apply_user_liked_photo(photo) for photo in photos]
-    # print(articles)
+
     context = {
         'articles': articles,
-        'comment_form': ArticleCommentForm(),
         'search_form': search_form,
         # 'user': user,
     }
@@ -46,22 +49,37 @@ def index(request):
         context,
     )
 
-
-'''class HomeView(TemplateView):
+'''
+class HomeView(TemplateView):
     # TODO: should it redirect there
     template_name = 'common/home-page.html'
     form_class = SearchArticleForm
+    search_pattern = None
+
+    def get_form(self, form_class):
+        return form_class(self.request.GET)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        articles = Article.objects.all()
-        user = UserModel.objects.filter(id=self.request.user.pk).get()
+        articles = Article.objects.all().order_by('-date_created')
+
+        if self.search_pattern:
+            articles = articles.filter(title__contains=self.search_pattern).order_by('-date_created')
+        
+        # if search_form.is_valid():
+        # search_pattern = search_form.cleaned_data['title']
+        # if self.search_pattern:
+        #     articles = Article.objects.filter(title__contains=self.search_pattern).order_by('-date_created')
+        # articles = Article.objects.all()
+        
+        # user = UserModel.objects.filter(id=self.request.user.pk).get()
         # user_like_articles = Article.objects.filter(pk=article.id, user_id=self.request.user.pk)
-        likes = [apply_likes_count(article) for article in articles]
-        dislikes = [apply_dislikes_count(article) for article in articles]
+        # likes = [apply_likes_count(article) for article in articles]
+        # dislikes = [apply_dislikes_count(article) for article in articles]
 
         context.update({
             'articles': articles,
+            'form_class': self.form_class,
             # 'likes': likes,
             # 'dislikes': dislikes,
         })
@@ -88,42 +106,9 @@ def index(request):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect('login user')
-        return super().dispatch(request, *args, **kwargs)'''
+        return super().dispatch(request, *args, **kwargs)
 
-# def details_photo(request, pk):
-#     photo = Photo.objects.filter(pk=pk) \
-#         .get()
-#
-#     user_like_photos = Photo.objects.filter(pk=pk, user_id=request.user.pk)
-#
-#     context = {
-#         'photo': photo,
-#         'has_user_liked_photo': user_like_photos,
-#         'likes_count': photo.photolike_set.count(),
-#         'is_owner': request.user == photo.user,
-#     }
-#
-#     return render(
-#         request,
-#         'photos/photo-details-page.html',
-#         context,
-#     )
-
-
-#     photos = [apply_likes_count(photo) for photo in photos]
-#     photos = [apply_user_liked_photo(photo) for photo in photos]
-#     print(photos)
-#     context = {
-#         'photos': photos,
-#         'comment_form': PhotoCommentForm(),
-#         'search_form': search_form,
-#     }
-#
-#     return render(
-#         request,
-#         'common/home-page.html',
-#         context,
-#     )
+'''
 
 
 @login_required
@@ -184,17 +169,8 @@ def comment_article(request, article_id, user_id):
             comment.article = article
             comment.user = user
             comment.save()
-    else:
-        form = ArticleCommentForm()
 
-    context = {
-        'form': form,
-        'article': article,
-        # 'comment': comment,
-    }
-    return render(request, 'articles/article-details-page.html', context)
-
-    # return redirect(get_article_url(request, article_id))
+    return redirect(get_article_url(request, article_id))
 
 
 @login_required
@@ -208,20 +184,6 @@ def bookmark_article(request, article_id):
     return redirect(get_article_url(request, article_id))
 
 
-# @login_required
-# def like_photo(request, photo_id):
-#     user_liked_photos = PhotoLike.objects \
-#         .filter(photo_id=photo_id, user_id=request.user.pk)
-#
-#     if user_liked_photos:
-#         user_liked_photos.delete()
-#     else:
-#         PhotoLike.objects.create(
-#             photo_id=photo_id,
-#             user_id=request.user.pk,
-#         )
-#
-#     return redirect(get_photo_url(request, photo_id))
 #
 # def get_photo_url(request, photo_id):
 #     return request.META['HTTP_REFERER'] + f'#photo-{photo_id}'

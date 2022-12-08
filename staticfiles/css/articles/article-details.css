@@ -17,7 +17,7 @@
     padding: 25px;
     font-size: 20px;
     line-height: 1.5em;
-    font-family: "Roboto Slab";
+    font-family: "Roboto Slab", serif;
     font-weight: normal;
     position: relative;
 }
@@ -153,29 +153,46 @@ article .bookmark {
     top: 3px;
     font-size: 18px;
 }
-/* COMMENTS */
-body .add_comment_box {
-    width: 70%;
-    margin: 0 auto;
-    box-shadow: 0 0 50px 0 rgba(0, 0, 0, .1);
-    margin-bottom: 25px;
-    margin-top: 40px;
-    display: block;
 
-    padding-bottom: 10px;
+
+.add_comment_box {
+    width: 70%;
+    box-shadow: 0 0 50px 0 rgba(0, 0, 0, .1);
+    margin: 25px auto;
+    display: block;
+    font-family: "Roboto Condensed", serif;
+
+
+    padding: 20px 0 20px 0;
+
 }
-body .add_comment_box button {
+
+.add_comment_box .comment_window {
+    position: relative;
+    left: 0.5%;
+}
+
+.add_comment_box button {
     position: relative;
     left: 45%;
-
+    top: 15px;
     font-size: 16px;
 }
 
-body .comments_box {
-    width: 70%;
-    margin: 0 auto;
+.comments_box {
+    width: 90%;
+    position: relative;
+    /* left: 45%;  */
+    top: 15px;
     box-shadow: 0 0 50px 0 rgba(0, 0, 0, .1);
-    margin-bottom: 25px;
-    margin-top: 40px;
+    border: 1px solid grey;
+    margin: 40px auto 25px;
     display: block;
 }
+
+
+.comments_box ol {
+    list-style: none;
+
+}
+

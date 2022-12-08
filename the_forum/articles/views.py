@@ -7,9 +7,11 @@ from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView
 
 from core.utils import apply_likes_count, apply_dislikes_count
+from the_forum.accounts.models import Profile
 from the_forum.articles.forms import ArticleCreateForm, ArticleEditForm, ArticleDeleteForm
 from the_forum.articles.models import Article
-
+from the_forum.common.forms import ArticleCommentForm
+from the_forum.common.models import ArticleComment
 
 # Create your views here.
 
@@ -148,20 +150,24 @@ class ArticleDetailsView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        article = Article.objects.filter().get()
+        article = Article.objects.get(id=self.object.pk)
         likes = [apply_likes_count(article)]
         dislikes = [apply_dislikes_count(article)]
         # user_likes_articles = Article.objects.filter(pk=self.object.pk, user_id=self.request.user.pk)
-        # user = UserModel.objects.get(id=self.request.user.pk)
-        # comments = article.objects.all(comment_id=article.id)
+        user = UserModel.objects.get(id=self.request.user.pk)
+        profile = Profile.objects.get(user_id=self.request.user.pk)
+        comments = ArticleComment.objects.filter(article_id=article.id)
+        comment_form = ArticleCommentForm
         context.update({
             'article': article,
             'likes': likes,
             'dislikes': dislikes,
             'is_owner': article.user == self.request.user,
             # 'has_user_liked_photo': user_likes_articles,
-            # 'user': user,
-            # 'comments': comments,
+            'user': user,
+            'profile': profile,
+            'comments': comments,
+            'comment_form': comment_form,
         })
 
         return context

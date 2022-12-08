@@ -37,10 +37,10 @@ class SignUpView(views.CreateView):
     #         form.instance.user = self.request.user
     #         return super().form_valid(form)
 
-    #     def post(self, request, *args, **kwargs):
-    #         response = super().post(request, *args, **kwargs)
-    #         login(request, self.object)
-    #         return response
+    # def post(self, request, *args, **kwargs):
+    #     response = super().post(request, *args, **kwargs)
+    #     login(request, self.object)
+    #     return response
 
 
 # LoginView -> form_class = AuthenticationForm -> username / password
@@ -184,19 +184,6 @@ class UserDeleteView(views.DeleteView):
     form_class = UserDeleteForm
 
 
-
-''' 
-
-def edit_pet(request, pk):
-    return pet_action(request, EditPetForm, 'profile details', Pet.objects.get(pk=pk), 'main/pet_edit.html')
-
-
-def delete_pet(request, pk):
-    return pet_action(request, DeletePetForm, 'profile details', Pet.objects.get(pk=pk), 'main/pet_delete.html')
-
-'''
-
-
 def change_password_view(request, pk):
     user = UserModel.objects.get(pk=pk)
     if request.method == 'POST':
@@ -218,69 +205,3 @@ def change_password_view(request, pk):
     }
 
     return render(request, 'accounts/profile-password-change.html', context)
-
-
-# class Location(models.Model):
-#     description = model.CharField(max_length=40)
-#     address1 = model.CharField(max_length=40)
-#     # ..... (and so on)
-#     tel = model.CharField(max_length=12)
-
-# class InformationRequest(models.Model):
-#     source = models.ForeignKey(Location)
-#     request_date = Models.DateField(default=datetime.now())
-#     # ..... (and so on)
-
-# >>> loc = Location()
-# >>> loc.tel = "123"
-# >>> loc.save()
-# >>> info = InformationRequest()
-# >>> info.source = loc
-# >>> info.save()
-
-
-# Fetching:
-
-# >>> info.source.tel ==> Child.user.first_name
-# '123'
-
-# class InformationRequest(models.Model):
-#     source = models.ForeignKey(Location, related_name="information_requests")
-#     request_date = Models.DateField(default=datetime.now())
-#     # ..... (and so on)
-#
-#     def contact_tel(self):
-#         return self.source.tel
-
-# >>> info.contact_tel()
-# '123'
-
-# OR
-
-# class InformationRequest(models.Model):
-#     source = models.ForeignKey(Location, related_name="information_requests")
-#     request_date = Models.DateField(default=datetime.now())
-#     # ..... (and so on)
-#
-#     @property
-#     def contact_tel(self):
-#         return self.source.tel
-
-# >>> info.contact_tel
-# '123'
-
-'''
-Model: 
-UserProfile = child user = OneToOneField
-
-UserForm():
-    model = User
-    fields = ()
-
-UserProfileEditForm():
-    model = UserProfile 
-
-def edit_profile(self, request):
-    user_form = UserForm(instance=request.user)
-    user_profile_form = UserProfileEditForm(instance=request.user.userprofile)
-'''

@@ -1,10 +1,14 @@
 {% extends "base/base.html" %}
 {% block page_content %}
 {% load placeholders %}
+{% load static %}
+    <link rel="stylesheet" href="{% static 'css/accounts/profile-delete.css' %}" />
     <form method="post" action="{% url 'delete user' pk=request.user.pk %}">
-       <h3>Are you sure you want to delete your profile?:</h3>
-        <button class="edit-btn" type="submit">Delete</button>
-        {% csrf_token %}
+        <div class="delete_box">
+            <h3>Are you sure you want to delete your profile?</h3>
+            <button class="edit-btn" type="submit">Delete</button>
+            {% csrf_token %}
+        </div>
     </form>
 {% endblock %}
 

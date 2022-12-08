@@ -2,7 +2,6 @@
 {% load static %}
 {% block page_content %}
     <link rel="stylesheet" href="{% static 'css/articles/article-details.css' %}" />
-
     <main>
         <article class="article_box">
           <a href="{% url 'details article' article.slug %}" class="article_box_header_link"
@@ -10,8 +9,14 @@
               >{{ article.title }}</span
             ></a
           >
+            {% if is_owner %}
+                <form method="post" action="{% url 'edit article' article.slug %}">
+                <button>Edit</button>
+                    {% csrf_token %}
+                </form>
+            {% endif %}
           <div class="article_box_meta">
-            <a href="{% url 'details user' pk=request.user.pk %}" class="article_box_author_link">{{ user.username }}</a>
+            <a href="{% url 'details user' pk=request.user.pk %}" class="article_box_author_link">{{ profile.username }}</a>
             <time class="article_box_time">{{ article.date_created }}</time>
           </div>
           <div class="article_box_content">
@@ -58,7 +63,7 @@
             </div>
 
             <div class="share">
-                <a href="{% url 'share article' article_id=article.id %}">
+                <a href="{% url 'share article' article.slug %}">
                     <?xml version="1.0" encoding="UTF-8"?>
                     <svg
                             width="26px"
@@ -97,38 +102,31 @@
               <i class="fa-regular fa-bookmark"></i>
             </div>
           </div>
-{#            {% if is_owner %}#}
-{#                Owner#}
-{#            {% else %}#}
-{#                Not owner#}
-{#            {% endif %}#}
         </article>
+
         <div class="add_comment_box">
-          <!-- Start Add Comments Form -->
-          <form method="post" action="{% url 'comment article' article_id=article.id user_id=request.user.pk %}">
-              {{ form }}
-              {% csrf_token %}
-{#            <label for="id_body"></label>#}
-{##}
-{#            <textarea#}
-{#              name="body"#}
-{#              cols="138"#}
-{#              rows="10"#}
-{#              placeholder="Add comment..."#}
-{#              maxlength="300"#}
-{#              required=""#}
-{#              id="id_body"#}
-{#            ></textarea>#}
-            <!-- Post Comments Button -->
-            <button type="submit">Comment</button>
-          </form>
-        </div>
-        <div class="comments_box">
-            {% for comment in comments %}
-                <div class="profile_image">{{ comment.publication_date }}</div>
-                <div class="username">{{ comment.user_id }}</div>
-                <div class="content">{{ comment.text }}</div>
-            {% endfor %}
+            <div class="comment_window">
+                <form method="post" action="{% url 'comment article' article_id=article.id user_id=request.user.pk %}">
+                    {{ comment_form }}
+                    {% csrf_token %}
+                    <button type="submit">Comment</button>
+                </form>
+            </div>
+            <div class="comments_box">
+                {% for comment in comments %}
+                    <ol>
+                        <li class="username">
+                            <b>{{ profile.username }}</b>
+                        </li>
+                        <li class="publication_date">
+                            <em>{{ comment.publication_date }}</em>
+                        </li>
+                        <li class="content">
+                            {{ comment.text }}
+                        </li>
+                    </ol>
+                {% endfor %}
+            </div>
         </div>
       </main>
 {% endblock %}

@@ -1,16 +1,23 @@
 {% extends "base/base.html" %}
 {% block page_content %}
 {% load placeholders %}
+{% load static %}
+    <link rel="stylesheet" href="{% static 'css/accounts/profile-edit-page.css' %}" />
+
     <form method="post" action="{% url 'edit user' pk=request.user.pk %}">
-        <h3>Edit Your profile here:</h3>
 {#        {% for field in form %}#}
-            <p>Email: {{ form_class.email }}</p>
-            <p>Username: {{ second_form_class.username }}</p>
-            <p>First Name: {{ second_form_class.first_name }}</p>
-            <p>Last Name: {{ second_form_class.last_name }}</p>
+        <div class="edit_profile_box">
+            <h2>Edit your profile here:</h2>
+            <ol>
+                <li>Email: {{ form_class.email }}</li>
+                <li>Username: {{ second_form_class.username }}</li>
+                <li>First Name: {{ second_form_class.first_name }}</li>
+                <li>Last Name: {{ second_form_class.last_name }}</li>
+            </ol>
+            <button class="edit-btn" type="submit">Confirm</button>
+            {% csrf_token %}
+        </div>
 {#        {% endfor %}#}
-        <button class="edit-btn" type="submit">Edit</button>
-        {% csrf_token %}
     </form>
     <a href="{% url 'change password' pk=request.user.pk %}">Change password here.</a>
     <a href="{% url 'delete user' pk=request.user.pk %}">Delete your account here.</a>
