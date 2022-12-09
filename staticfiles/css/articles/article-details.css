@@ -130,6 +130,11 @@ article .buttons {
     bottom: 15%;
 }
 
+article .buttons a {
+    text-decoration: none;
+    color: black;
+}
+
 article .like {
     position: relative;
     right: 20%;
@@ -143,14 +148,14 @@ article .dislike {
 
 article .share {
     position: relative;
-    left: 20%;
+    left: 10%;
     bottom: 1px;
 }
 
 article .bookmark {
     position: relative;
-    left: 40%;
-    top: 3px;
+    left: 22%;
+    top: 0;
     font-size: 18px;
 }
 
@@ -161,7 +166,6 @@ article .bookmark {
     margin: 25px auto;
     display: block;
     font-family: "Roboto Condensed", serif;
-
 
     padding: 20px 0 20px 0;
 
@@ -188,6 +192,11 @@ article .bookmark {
     border: 1px solid grey;
     margin: 40px auto 25px;
     display: block;
+}
+
+.comments_box #id_text {
+    color: black;
+    text-decoration: none;
 }
 
 

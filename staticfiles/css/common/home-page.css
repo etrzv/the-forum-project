@@ -130,9 +130,16 @@ article .buttons {
     bottom: 15%;  
 }
 
+article .buttons a {
+    text-decoration: none;
+    color: black;
+}
+
 article .like {
     position: relative; 
-    right: 20%; 
+    right: 20%;
+    text-decoration: none;
+
 }
 
 article .dislike {
@@ -141,16 +148,16 @@ article .dislike {
     top: 2px; 
 }
 
-article .share {
-    position: relative; 
-    left: 20%;
-    bottom: 1px;  
-}
+/*article .share {*/
+/*    position: relative; */
+/*    left: 20%;*/
+/*    bottom: 1px;  */
+/*}*/
 
 article .bookmark {
     position: relative; 
-    left: 40%; 
+    left: 30%;
     top: 3px; 
-    font-size: 18px; 
+    font-size: 18px;
 }
 

@@ -17,6 +17,10 @@ class ArticleCommentForm(forms.ModelForm):
             ),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['text'].label = ''
+
 
 class SearchArticleForm(forms.Form):
     title = forms.CharField(

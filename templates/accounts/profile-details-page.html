@@ -2,58 +2,69 @@
 {% block page_content %}
 {% load placeholders %}
     {% load static %}
+
     <link rel="stylesheet" href="{% static 'css/accounts/profile-details.css' %}" />
     <body>
         <main>
             <div class="info_box">
-                <h2>Profile Information</h2>
+                <h2>Profile's Information:</h2>
                 <ol>
-                    <li> Email: {{ user.email }}</li>
-                    <li>First Name: {{ user_profile.first_name }}</li>
-                    <li>Last Name: {{ user_profile.last_name }}</li>
-                    <li>Username: {{ user_profile.username }}</li>
+                    <li><b>Email:</b> {{ object.email }}</li>
+                    <li><b>First Name:</b> {{ object.profile.first_name }}</li>
+                    <li><b>Last Name:</b> {{ object.profile.last_name }}</li>
+                    <li><b>Username:</b> {{ object.profile.username }}</li>
                 </ol>
             </div>
             <form method="post" action="{% url 'add article' %}">
                 <div class="created_articles">
-                    <h2>Profile Articles</h2>
+                    <h2>Profile's Articles:</h2>
                     <ol>
-                        <h3>Created articles:</h3>
+                        <h3>Created Articles:</h3>
                         {% for article in articles %}
                             <ol>
-                            <li>{{ article.title }}</li>
+                            <li>
+                                <b>Article's Title:</b>
+                                {{ article.title }}
+                            </li>
                                 {% if article.photo %}
                                     <li class="photo">
                                         <b>Link to image:</b>
                                         {{ article.photo }}
                                     </li>
                                 {% endif %}
-                                <li class="content">
-                                    <b>Article's Content:</b>
-                                    {{ article.content }}
-                                </li>
+{#                                <li class="content">#}
+{#                                    <b>Article's Content:</b>#}
+{#                                    {{ article.content }}#}
+{#                                </li>#}
                             </ol>
                         {% endfor %}
                     </ol>
-                    <ol>
-                    <h3>Bookmarked Articles:</h3>
-                    {% for b_article in bookmarked_articles %}
-                        <li class="title">
-                            <b>Article's Title:</b>
-                                {{ b_article.title }}
-                            </li>
-                            {% if b_article.photo %}
-                                <li class="photo">
-                                    <b>Link to image:</b>
-                                    {{ b_article.photo }}
+                    {% if bookmarked_articles.user %}
+                    <div class="bookmarked_articles">
+                        <ol>
+                            <h3>Bookmarked Articles:</h3>
+                            {% for b_article in bookmarked_articles.user %}
+                                <li class="title">
+                                    <b>Article's Title:</b>
+                                    {{ b_article.article.title }}
                                 </li>
-                            {% endif %}
-                            <li class="content">
-                                <b>Article's Content:</b>
-                                {{ b_article.content }}
-                            </li>
-                    {% endfor %}
-                    </ol>
+                                {% if b_article.photo %}
+                                    <li class="photo">
+                                        <b>Link to image:</b>
+                                        {{ b_article.photo }}
+                                    </li>
+                                {% endif %}
+{#                                <li class="content">#}
+{#                                    <b>Article's Content:</b>#}
+{#                                    {{ b_article.content }}#}
+{#                                </li>#}
+
+                        {% endfor %}
+                        </ol>
+                    </div>
+                    {% else %}
+                        <h3>No bookmarked articles</h3>
+                    {% endif %}
                     <button type="submit">Create</button>
                     {% csrf_token %}
                 </div>

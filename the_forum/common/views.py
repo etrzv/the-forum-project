@@ -32,15 +32,15 @@ def index(request):
     if search_pattern:
         articles = articles.filter(title__contains=search_pattern).order_by('-date_created')
 
-    # likes = [apply_likes_count(article) for article in articles]
-    # dislikes = [apply_dislikes_count(article) for article in articles]
-    # user = UserModel.objects.get(pk=request.user.pk)
-    # photos = [apply_user_liked_photo(photo) for photo in photos]
+    likes = [apply_likes_count(article) for article in articles]
+    dislikes = [apply_dislikes_count(article) for article in articles]
 
     context = {
         'articles': articles,
         'search_form': search_form,
-        # 'user': user,
+        'user': user,
+        'likes': likes,
+        'dislikes': dislikes,
     }
 
     return render(
@@ -148,13 +148,13 @@ def dislike_article(request, article_id):
     return redirect(get_article_url(request, article_id))
 
 
-@login_required
-def share_article(request, article_id):
-    article_details_url = reverse('details article', kwargs={
-        'pk': article_id
-    })
-    pyperclip.copy(article_details_url)
-    return redirect(get_article_url(request, article_id))
+# @login_required
+# def share_article(request, article_id):
+#     article_details_url = reverse('details article', kwargs={
+#         'pk': article_id
+#     })
+#     pyperclip.copy(article_details_url)
+#     return redirect(get_article_url(request, article_id))
 
 
 @login_required
@@ -178,7 +178,9 @@ def bookmark_article(request, article_id):
     user_bookmarked_articles = ArticleBookmark.objects.filter(article_id=article_id, user_id=request.user.pk)
 
     if user_bookmarked_articles:
+        # user_bookmarked_article = ArticleBookmark.objects.get(article_id=article_id, user_id=request.user.pk)
         user_bookmarked_articles.delete()
+        # user_bookmarked_article.delete()
     else:
         ArticleBookmark.objects.create(article_id=article_id, user_id=request.user.pk)
     return redirect(get_article_url(request, article_id))

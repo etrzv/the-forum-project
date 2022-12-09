@@ -11,7 +11,7 @@ from the_forum.accounts.models import Profile
 from the_forum.articles.forms import ArticleCreateForm, ArticleEditForm, ArticleDeleteForm
 from the_forum.articles.models import Article
 from the_forum.common.forms import ArticleCommentForm
-from the_forum.common.models import ArticleComment
+from the_forum.common.models import ArticleComment, ArticleLike, ArticleDislike, ArticleBookmark
 
 # Create your views here.
 
@@ -130,7 +130,7 @@ def get_queryset(self):
 #     photo = Photo.objects.filter(pk=pk) \
 #         .get()
 #
-#     user_like_photos = Photo.objects.filter(pk=pk, user_id=request.user.pk)
+#
 #
 #     context = {
 #         'photo': photo,
@@ -147,43 +147,50 @@ def get_queryset(self):
 class ArticleDetailsView(LoginRequiredMixin, DetailView):
     model = Article
     template_name = 'articles/article-details-page.html'
+    form_class = ArticleCommentForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         article = Article.objects.get(id=self.object.pk)
         likes = [apply_likes_count(article)]
         dislikes = [apply_dislikes_count(article)]
-        # user_likes_articles = Article.objects.filter(pk=self.object.pk, user_id=self.request.user.pk)
+
         user = UserModel.objects.get(id=self.request.user.pk)
-        profile = Profile.objects.get(user_id=self.request.user.pk)
-        comments = ArticleComment.objects.filter(article_id=article.id)
+        profile = Profile.objects.get(user_id=user.id)
+
+        user_likes_articles = ArticleLike.objects.filter(article_id=article.id, user_id=user.pk)
+        user_dislikes_articles = ArticleDislike.objects.filter(article_id=article.id, user_id=user.pk)
+        user_bookmarks_articles = ArticleBookmark.objects.filter(article_id=article.id, user_id=user.pk)
+
+        # article, articlebookmark, articlecomment, articledislike, articlelike, date_joined, email,
+        # groups, id, is_active, is_staff, is_superuser, last_login, logentry, password, profile, user_permissions
+
+        # comments = ArticleComment.objects.filter(article_id=article.id) # both work
+        comments = article.articlecomment_set.all()
+        # returns all article related comments
+
         comment_form = ArticleCommentForm
+
         context.update({
             'article': article,
             'likes': likes,
             'dislikes': dislikes,
+
             'is_owner': article.user == self.request.user,
-            # 'has_user_liked_photo': user_likes_articles,
+            'has_user_liked_article': user_likes_articles,
+            'has_user_disliked_article': user_dislikes_articles,
+            'has_user_bookmarked_article': user_bookmarks_articles,
+
             'user': user,
             'profile': profile,
+
             'comments': comments,
             'comment_form': comment_form,
+
         })
 
         return context
-
-
-# def article_details(request, slug):
-#     article = Article.objects.get(slug=slug)
-#     # path('article/<slug:slug>/', include([
-#     # = articles/article/1-witcher-3-ending/
-#
-#     # comments = article.objects.filter(id=slug)
-#     context = {
-#         'article': article,
-#         # 'comments': comments,
-#     }
-#     return render(request, 'articles/article-details-page.html', context)
 
 
 class ArticleDeleteView(LoginRequiredMixin, DetailView):
@@ -194,45 +201,50 @@ class ArticleDeleteView(LoginRequiredMixin, DetailView):
 
 
 '''
-class PetPhotoDetailsView(LoginRequiredMixin, DetailView):
-    model = PetPhoto
-    template_name = 'main/photo_details.html'
-    context_object_name = 'pet_photo'
-    
-    def get_queryset(self):
-        return super()\
-            .get_queryset()\
-            .prefetch_related('tagged_pets')
+
+class UserDetailsView(views.DetailView):
+    template_name = 'accounts/profile-details-page.html'
+    model = UserModel
+    photos_paginate_by = 2
+
+    def get_photos_page(self):
+        return self.request.GET.get('page', 1)
+
+    def get_paginated_photos(self):
+        page = self.get_photos_page()
+
+        photos = self.object.photo_set \
+            .order_by('-publication_date')
+
+        paginator = Paginator(photos, self.photos_paginate_by)
+        return paginator.get_page(page)
 
     def get_context_data(self, **kwargs):
-        # in order for us to hide the edit / delete buttons under a picture that is not ours
-        context = super().get_context_data()
+        context = super().get_context_data(**kwargs)
 
-        # we need to know the owner of the photo, so we can add / take functionality
-        context['is_owner'] = self.object.user == self.request.user
+        context['is_owner'] = self.request.user == self.object
+        context['pets_count'] = self.object.pet_set.count()
+
+        photos = self.object.photo_set \
+            .prefetch_related('photolike_set')
+
+        context['photos_count'] = photos.count()
+        context['likes_count'] = sum(x.photolike_set.count() for x in photos)
+
+        context['photos'] = self.get_paginated_photos()
+        context['pets'] = self.object.pet_set.all()
 
         return context
 
-
-# we make sure that only a logged user can use this functionality
-class CreatePetPhotoView(LoginRequiredMixin, CreateView):
-    model = PetPhoto
-    template_name = 'main/photo_create.html'
-    fields = ('photo', 'description', 'tagged_pets')
-
-    success_url = reverse_lazy('dashboard')
-    
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-
-class EditPetPhotoView(UpdateView):
-    model = PetPhoto
-    template_name = 'main/photo_edit.html'
-    fields = ('description',)
-
-    def get_success_url(self):
-        return reverse_lazy('edit pet photo', kwargs= {'pk': self.object.id})
+##########
+def userprofile(request, user_id=None):
+    if user_id:
+        user = User.objects.get(id=user_id)
+        Post = post.objects.order_by('-created')
+        return render(request,'social_media/profile.html', {'Post':Post,'User':user})
+    else:
+        user = User.objects.get(id=user_id)
+        Post = post.objects.order_by('-created')
+        return render(request,'social_media/profile.html', {'Post':Post,'User':user})
 
 '''

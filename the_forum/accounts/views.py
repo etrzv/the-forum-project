@@ -67,23 +67,38 @@ class UserDetailsView(views.DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
+
         #                                              self.object is a Profile
         articles = list(Article.objects.filter(user_id=self.object.pk))
-        user = UserModel.objects.get(id=self.request.user.pk)
-        user_profile = Profile.objects.get(user_id=self.request.user.pk)
+        # photos = self.object.photo_set \
+        #   .prefetch_related('photolike_set')
+
+        # user = UserModel.objects.get(id=self.request.user.pk)
+        # user_profile = Profile.objects.get(user_id=self.request.user.pk)
+
         # Photo's field for likes is named `{NAME_OF_THIS_MODEL.lower()}_set`
         # using APIs we can access related objects
-        bookmarked_articles = self.object.article_set.prefetch_related('articlebookmark_set')
+
+        bookmarked_articles = ArticleBookmark.objects.filter(user_id=self.object.pk)
+
+        # bookmarked_articles = self.object.articlebookmark_set.filter(article_id=)
+        # bookmarked_articles = ArticleBookmark.objects.filter(article_id=self.object.pk)
+        #       Article
+        # new = Post.newmanager.filter(favorites=request.user)
+
+        is_owner = self.request.user == self.object
+
         context.update({
             'articles': articles,
-            'user': user,
-            'user_profile': user_profile,
+            # 'user': user,
+            # 'user_profile': user_profile,
             'bookmarked_articles': bookmarked_articles,
+            'is_owner': is_owner,
+
         })
 
         return context
-#         photos = self.object.photo_set \
-#             .prefetch_related('photolike_set')
+
 
 # model = Profile
 #     template_name = 'main/../../templates/accounts/profile_details.html'
