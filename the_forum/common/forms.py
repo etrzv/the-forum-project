@@ -26,6 +26,7 @@ class SearchArticleForm(forms.Form):
     title = forms.CharField(
         max_length=50,
         required=False,
+        label='',
     )
 
     widgets = {
@@ -33,10 +34,7 @@ class SearchArticleForm(forms.Form):
             attrs={
                 'cols': 10,
                 'rows': 1,
-                'placeholder': 'Search...'
+                'placeholder': 'Search...',
             },
         )
     }
-
-
-

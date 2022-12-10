@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -94,41 +95,12 @@ class UserDetailsView(views.DetailView):
             # 'user_profile': user_profile,
             'bookmarked_articles': bookmarked_articles,
             'is_owner': is_owner,
-
         })
 
         return context
 
 
-# model = Profile
-#     template_name = 'main/../../templates/accounts/profile_details.html'
-#     context_object_name = 'profile'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         #                               self.object is a Profile
-#         pets = list(Pet.objects.filter(user_id=self.object.user_id))
-#
-#         pet_photos = PetPhoto.objects \
-#             .filter(tagged_pets__in=pets) \
-#             .distinct()
-#
-#         # distinct gives us just the unique values
-#         total_likes_count = sum(pp.likes for pp in pet_photos)
-#         total_pet_photos_count = len(pet_photos)
-#
-#         # update merges 2 dictionaries
-#         context.update({
-#             'total_likes_count': total_likes_count,
-#             'total_pet_photos_count': total_pet_photos_count,
-#             'is_owner': self.object.user_id == self.request.user.id,
-#             'pets': pets,
-#         })
-#
-#         return context
-
-
-class UserEditView(views.UpdateView):
+class UserEditView(LoginRequiredMixin, views.UpdateView):
     template_name = 'accounts/profile-edit-page.html'
     model = UserModel
     # NEW
@@ -177,8 +149,7 @@ class UserEditView(views.UpdateView):
             'form_class': self.form_class(instance=user),
             'second_form_class': self.second_form_class(instance=profile)
         })
-        # context['form_class'] = self.form_class(instance=user)
-        # context['second_form_class'] = self.second_form_class(instance=profile)
+
         return context
 
     def post(self, request, *args, **kwargs):
@@ -192,7 +163,7 @@ class UserEditView(views.UpdateView):
             return redirect(self.get_success_url())
 
 
-class UserDeleteView(views.DeleteView):
+class UserDeleteView(LoginRequiredMixin, views.DeleteView):
     template_name = 'accounts/profile-delete-page.html'
     model = UserModel
     success_url = reverse_lazy('show index')

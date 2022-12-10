@@ -24,7 +24,9 @@
                             <ol>
                             <li>
                                 <b>Article's Title:</b>
+                                <a href="{% url 'details article' article.slug %}">
                                 {{ article.title }}
+                                </a>
                             </li>
                                 {% if article.photo %}
                                     <li class="photo">
@@ -39,14 +41,16 @@
                             </ol>
                         {% endfor %}
                     </ol>
-                    {% if bookmarked_articles.user %}
+                    {% if bookmarked_articles %}
                     <div class="bookmarked_articles">
                         <ol>
                             <h3>Bookmarked Articles:</h3>
-                            {% for b_article in bookmarked_articles.user %}
+                            {% for b_article in bookmarked_articles %}
                                 <li class="title">
                                     <b>Article's Title:</b>
-                                    {{ b_article.article.title }}
+                                    <a href="{% url 'details article' b_article.article.slug %}">
+                                        {{ b_article.article.title }}
+                                    </a>
                                 </li>
                                 {% if b_article.photo %}
                                     <li class="photo">

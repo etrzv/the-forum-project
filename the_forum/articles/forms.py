@@ -1,6 +1,7 @@
 from django import forms
 
 from the_forum.articles.models import Article
+from the_forum.common.models import ArticleLike, ArticleDislike, ArticleComment, ArticleBookmark
 
 
 class ArticleCreateForm(forms.ModelForm):
@@ -26,86 +27,26 @@ class ArticleEditForm(forms.ModelForm):
         fields = ('title', 'photo', 'content', )
 
         widgets = {
-            'content': forms.Textarea(attrs={'rows': 4, 'cols': 20})
+            'title': forms.Textarea(attrs={'rows': 1, 'cols': 55}),
+            'photo': forms.Textarea(attrs={'rows': 1, 'cols': 55}),
+            'content': forms.Textarea(attrs={'rows': 15, 'cols': 73}),
         }
 
 
 class ArticleDeleteForm(forms.ModelForm):
+    def save(self, commit=True):
+        likes = list(self.instance.articlelike_set.all())
+        dislikes = list(self.instance.articledislike_set.all())
+        comments = list(self.instance.articlecomment_set.all())
+        bookmarks = list(self.instance.articlebookmarks_set.all())
+        if commit:
+            ArticleLike.objects.filter(articlelike__contains=likes).delete()
+            ArticleDislike.objects.filter(articledislike__contains=dislikes).delete()
+            ArticleComment.objects.filter(articlecomment__contains=comments).delete()
+            ArticleBookmark.objects.filter(articlebookmark__contains=bookmarks).delete()
+            self.instance.delete().delete()
+        return self.instance
+
     class Meta:
         model = Article
         fields = ()
-
-    def save(self, commit=True):
-        if commit:
-            self.instance.delete()
-        return self.instance
-
-
-'''
-from django import forms
-
-from petstagram.core.form_mixins import DisabledFormMixin
-from petstagram.pets.models import Pet
-
-
-# `ModelForm` and `Form`:
-# - `ModelForm` binds to models
-# - `Form` is detached from models
-
-class PetBaseForm(forms.ModelForm):
-    class Meta:
-        model = Pet
-        # fields = '__all__' (not the case, we want to skip `slug`
-        fields = ('name', 'date_of_birth', 'personal_photo')
-        # exclude = ('slug',)
-        labels = {
-            'name': 'Pet Name',
-            'personal_photo': 'Link to Image',
-            'date_of_birth': 'Date of Birth',
-        }
-        widgets = {
-            'name': forms.TextInput(
-                attrs={
-                    'placeholder': 'Pet name'
-                }
-            ),
-            'date_of_birth': forms.DateInput(
-                attrs={
-                    'placeholder': 'mm/dd/yyyy',
-                    'type': 'date',
-                }
-            ),
-            'personal_photo': forms.URLInput(
-                attrs={
-                    'placeholder': 'Link to image',
-                }
-            )
-        }
-
-
-class PetCreateForm(PetBaseForm):
-    pass
-
-
-class PetEditForm(DisabledFormMixin, PetBaseForm):
-    disabled_fields = ('name',)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._disable_fields()
-
-
-class PetDeleteForm(DisabledFormMixin, PetBaseForm):
-    disabled_fields = ('name', 'date_of_birth', 'personal_photo')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._disable_fields()
-
-    def save(self, commit=True):
-        if commit:
-            self.instance.delete()
-        return self.instance
-
-
-'''

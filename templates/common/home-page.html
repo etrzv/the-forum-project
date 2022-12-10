@@ -12,7 +12,7 @@
           >
 {#            {% if user.is_authenticated %}#}
                 <div class="article_box_meta">
-                    <a href="{% url 'details user' pk=request.user.pk %}" class="article_box_author_link">{{ article.user.profile.username }}</a>
+                    <a href="{% url 'details user' pk=article.user.pk %}" class="article_box_author_link">{{ article.user.profile.username }}</a>
                     <time class="article_box_time">{{ article.date_created }}</time>
                 </div>
                 <div class="article_box_content">
@@ -54,9 +54,10 @@
                 </a>
                 <div class="dislikes_number">{{ article.dislikes_count }}</div>
             </div>
-{#<i class="fa-regular fa-bookmark"></i>#}
             <div class="bookmark">
-              <a href="{% url 'bookmark article' article_id=article.id %}"><i class="fa-regular fa-bookmark"></i></a>
+              <a href="{% url 'bookmark article' article_id=article.id %}">
+                  <i class="fa-regular fa-bookmark"></i>
+              </a>
             </div>
           </div>
         </article>

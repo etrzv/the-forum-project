@@ -83,16 +83,3 @@ class UserDeleteForm(forms.ModelForm):
     class Meta:
         model = UserModel
         fields = ()
-
-#     def save(self, commit=True):
-#         pets = list(self.instance.pet_set.all())
-#         # the PetPhoto should be done with signals instead of coupling (import) - we break the abstraction
-#         # of the auth app
-#         PetPhoto.objects.filter(tagged_pets__in=pets).delete()
-#         self.instance.delete()
-#
-#         return self.instance
-#
-#     class Meta:
-#         model = Profile
-#         fields = ()

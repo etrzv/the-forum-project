@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 
 from core.utils import apply_likes_count, apply_dislikes_count
 from the_forum.accounts.models import Profile
@@ -73,15 +73,30 @@ class ArticleEditView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
+        article = self.model.objects.get(slug=self.object.slug)
+        context.update({
+            'form_class': self.form_class(instance=article),
+        })
         return context
 
     # TODO: check
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
+    # def form_valid(self, form):
+    #     form.instance.user = self.request.user
+    #     return super().form_valid(form)
+
+    # dispatch get calls get_context_data
+    # def dispatch(self, request, *args, **kwargs):
+    #     article = self.model.objects.get(slug=self.object.id)
+    #
+    #     if request.method == 'POST':
+    #         self.form_class = ArticleEditForm(request.POST, instance=article)
+    #     else:
+    #         self.form_class = ArticleEditForm(instance=article)
+    #
+    #     return self.form_class
 
     def get_success_url(self):
-        return reverse_lazy('edit article', kwargs={'slug': self.object.id})
+        return reverse_lazy('edit article', kwargs={'slug': self.object.slug})
 
 
 '''    
@@ -126,24 +141,6 @@ def get_queryset(self):
     # )
 
 
-# def details_photo(request, pk):
-#     photo = Photo.objects.filter(pk=pk) \
-#         .get()
-#
-#
-#
-#     context = {
-#         'photo': photo,
-#         'has_user_liked_photo': user_like_photos,
-#         'likes_count': photo.photolike_set.count(),
-#         'is_owner': request.user == photo.user,
-#     }
-#
-#     return render(
-#         request,
-#         'photos/photo-details-page.html',
-#         context,
-#     )
 class ArticleDetailsView(LoginRequiredMixin, DetailView):
     model = Article
     template_name = 'articles/article-details-page.html'
@@ -161,7 +158,7 @@ class ArticleDetailsView(LoginRequiredMixin, DetailView):
 
         user_likes_articles = ArticleLike.objects.filter(article_id=article.id, user_id=user.pk)
         user_dislikes_articles = ArticleDislike.objects.filter(article_id=article.id, user_id=user.pk)
-        user_bookmarks_articles = ArticleBookmark.objects.filter(article_id=article.id, user_id=user.pk)
+        # user_bookmarks_articles = ArticleBookmark.objects.filter(article_id=article.id, user_id=user.pk)
 
         # article, articlebookmark, articlecomment, articledislike, articlelike, date_joined, email,
         # groups, id, is_active, is_staff, is_superuser, last_login, logentry, password, profile, user_permissions
@@ -180,7 +177,7 @@ class ArticleDetailsView(LoginRequiredMixin, DetailView):
             'is_owner': article.user == self.request.user,
             'has_user_liked_article': user_likes_articles,
             'has_user_disliked_article': user_dislikes_articles,
-            'has_user_bookmarked_article': user_bookmarks_articles,
+            # 'has_user_bookmarked_article': user_bookmarks_articles,
 
             'user': user,
             'profile': profile,
@@ -193,7 +190,7 @@ class ArticleDetailsView(LoginRequiredMixin, DetailView):
         return context
 
 
-class ArticleDeleteView(LoginRequiredMixin, DetailView):
+class ArticleDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'articles/article-delete-page.html'
     model = Article
     success_url = reverse_lazy('show index')
@@ -205,46 +202,32 @@ class ArticleDeleteView(LoginRequiredMixin, DetailView):
 class UserDetailsView(views.DetailView):
     template_name = 'accounts/profile-details-page.html'
     model = UserModel
-    photos_paginate_by = 2
+    articles_paginate_by = 2
 
-    def get_photos_page(self):
+    def get_articles_page(self):
         return self.request.GET.get('page', 1)
 
-    def get_paginated_photos(self):
-        page = self.get_photos_page()
+    def get_paginated_articles(self):
+        article = self.get_articles_page()
 
-        photos = self.object.photo_set \
+        articles = self.object.article_set \
             .order_by('-publication_date')
 
-        paginator = Paginator(photos, self.photos_paginate_by)
-        return paginator.get_page(page)
+        paginator = Paginator(articles, self.articles_paginate_by)
+        return paginator.get_page(article)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         context['is_owner'] = self.request.user == self.object
-        context['pets_count'] = self.object.pet_set.count()
 
-        photos = self.object.photo_set \
-            .prefetch_related('photolike_set')
+        articles = self.object.article_set \
+            .prefetch_related('articleslike_set')
 
-        context['photos_count'] = photos.count()
-        context['likes_count'] = sum(x.photolike_set.count() for x in photos)
 
-        context['photos'] = self.get_paginated_photos()
-        context['pets'] = self.object.pet_set.all()
+        context['articles'] = self.get_paginated_articles()
+        context['article'] = self.object.article_set.all()
 
         return context
-
-##########
-def userprofile(request, user_id=None):
-    if user_id:
-        user = User.objects.get(id=user_id)
-        Post = post.objects.order_by('-created')
-        return render(request,'social_media/profile.html', {'Post':Post,'User':user})
-    else:
-        user = User.objects.get(id=user_id)
-        Post = post.objects.order_by('-created')
-        return render(request,'social_media/profile.html', {'Post':Post,'User':user})
 
 '''

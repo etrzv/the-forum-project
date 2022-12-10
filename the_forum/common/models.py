@@ -23,14 +23,14 @@ class ArticleComment(models.Model):
 
     article = models.ForeignKey(
         Article,
-        on_delete=models.RESTRICT,
+        on_delete=models.CASCADE,
         null=False,
         blank=True,
     )
 
     user = models.ForeignKey(
         UserModel,
-        on_delete=models.RESTRICT,
+        on_delete=models.CASCADE,
     )
 
 
@@ -40,40 +40,40 @@ class ArticleLike(models.Model):
 
     article = models.ForeignKey(
         Article,
-        on_delete=models.RESTRICT,
+        on_delete=models.CASCADE,
         null=False,
         blank=True,
     )
 
     user = models.ForeignKey(
         UserModel,
-        on_delete=models.RESTRICT,
+        on_delete=models.CASCADE,
     )
 
 
 class ArticleDislike(models.Model):
     article = models.ForeignKey(
         Article,
-        on_delete=models.RESTRICT,
+        on_delete=models.CASCADE,
         null=False,
         blank=True,
     )
 
     user = models.ForeignKey(
         UserModel,
-        on_delete=models.RESTRICT,
+        on_delete=models.CASCADE,
     )
 
 
 class ArticleBookmark(models.Model):
     article = models.ForeignKey(
         Article,
-        on_delete=models.RESTRICT,
+        on_delete=models.CASCADE,
         null=False,
         blank=True,
     )
 
     user = models.ForeignKey(
         UserModel,
-        on_delete=models.RESTRICT,
+        on_delete=models.CASCADE,
     )

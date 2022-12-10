@@ -5,22 +5,27 @@
     <link rel="stylesheet" href="{% static 'css/accounts/profile-edit-page.css' %}" />
 
     <form method="post" action="{% url 'edit user' pk=request.user.pk %}">
-{#        {% for field in form %}#}
         <div class="edit_profile_box">
             <h2>Edit your profile here:</h2>
             <ol>
-                <li>Email: {{ form_class.email }}</li>
-                <li>Username: {{ second_form_class.username }}</li>
-                <li>First Name: {{ second_form_class.first_name }}</li>
-                <li>Last Name: {{ second_form_class.last_name }}</li>
+                <li><b>Email:</b> {{ form_class.email }}</li>
+                <li><b>Username:</b> {{ second_form_class.username }}</li>
+                <li><b>First Name:</b> {{ second_form_class.first_name }}</li>
+                <li><b>Last Name:</b> {{ second_form_class.last_name }}</li>
             </ol>
             <button class="edit-btn" type="submit">Confirm</button>
             {% csrf_token %}
+            <ol class="links">
+                <li>
+                    <a href="{% url 'change password' pk=request.user.pk %}">Change your password here.</a>
+                </li>
+                <li>
+                    <a href="{% url 'delete user' pk=request.user.pk %}">Delete your account here.</a>
+                </li>
+            </ol>
         </div>
-{#        {% endfor %}#}
     </form>
-    <a href="{% url 'change password' pk=request.user.pk %}">Change password here.</a>
-    <a href="{% url 'delete user' pk=request.user.pk %}">Delete your account here.</a>
+
 
 {% endblock %}
 

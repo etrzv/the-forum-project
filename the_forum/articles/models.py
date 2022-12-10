@@ -33,6 +33,7 @@ class Article(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)
 
+    # Search, Engine Optimisation
     slug = models.SlugField(
         unique=True,
         null=False,

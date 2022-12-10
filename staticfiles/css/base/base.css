@@ -16,6 +16,7 @@ body header {
     margin-right: 2%;
     /* margin-top: 100px; */
 
+
 }
 
 body header .logo a {
@@ -45,10 +46,12 @@ nav a {
 nav .nav {
     position: relative;
     display: inline-block;
-    margin-left: 6%;
+    margin-left: 2%;
     left: 30%;
     bottom: 30px;
     list-style: none;
+
+    /*max-width: 90%;*/
 
 }
 
@@ -141,6 +144,8 @@ header div .searchbar {
 }
 
 header div .searchbar button {
+    position: relative;
+    right: 41px;
     font-size: 20px;
     border: 2px solid #8b3a3ad7;
     border-radius: 5px;

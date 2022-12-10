@@ -121,6 +121,7 @@ article .buttons {
     position: relative;
     left: 5.5%;
     padding-bottom: 10px;
+    font-size: 14px;
 }
 
 .likes_number, .dislikes_number {
@@ -128,6 +129,7 @@ article .buttons {
     position: relative;
     left: 5%;
     bottom: 15%;
+    font-size: 16px;
 }
 
 article .buttons a {
@@ -137,7 +139,8 @@ article .buttons a {
 
 article .like {
     position: relative;
-    right: 20%;
+    right: 14%;
+
 }
 
 article .dislike {
@@ -155,10 +158,28 @@ article .share {
 article .bookmark {
     position: relative;
     left: 22%;
-    top: 0;
+    top: 3px;
     font-size: 18px;
 }
 
+article .edit_button button {
+    position: relative;
+    left: 95%;
+    bottom: 4px;
+    font-size: 18px;
+}
+
+article .edit_button button:hover {
+    color: white;
+    background-color: rgba(104, 161, 6, 0.71);
+    border: rgba(106, 164, 11, 0.62) solid 1px;
+    border-radius: 5px;
+    /*padding-left: 2px; */
+    /*border: #8b3a3ad7 solid 1px;*/
+    margin-left: 4px;
+
+
+}
 
 .add_comment_box {
     width: 70%;
@@ -204,4 +225,48 @@ article .bookmark {
     list-style: none;
 
 }
+
+
+/*.bookmark i{*/
+/*    visibility: hidden;*/
+/*    width: 160px;*/
+/*    background-color: #555;*/
+/*    color: #fff;*/
+/*    text-align: center;*/
+/*    border-radius: 6px;*/
+/*    padding: 8px 0;*/
+/*    position: absolute;*/
+/*    z-index: 1;*/
+/*    bottom: 125%;*/
+/*    left: 50%;*/
+/*    margin-left: -80px;*/
+/*}*/
+
+/*.bookmark i::after{*/
+/*    content: "Bookmarked";*/
+/*    position: absolute;*/
+/*    top: 100%;*/
+/*    left: 50%;*/
+/*    margin-left: -5px;*/
+/*    border-width: 5px;*/
+/*    border-style: solid;*/
+/*    border-color: #555 transparent transparent transparent;*/
+/*}*/
+
+/*.bookmark .show {*/
+/*    visibility: visible;*/
+/*    -webkit-animation: fadeIn 1s;*/
+/*    animation: fadeIn 1s*/
+/*}*/
+
+/*!* Add animation (fade in the popup) *!*/
+/*@-webkit-keyframes fadeIn {*/
+/*    from {opacity: 0;}*/
+/*    to {opacity: 1;}*/
+/*}*/
+
+/*@keyframes fadeIn {*/
+/*    from {opacity: 0;}*/
+/*    to {opacity:1 ;}*/
+/*}*/
 

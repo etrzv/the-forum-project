@@ -3,10 +3,10 @@
     display: inline-block;
 
     width: 30%;
-    height: 400px;
+    height: 550px;
 
-    left: 30%;
-    top: 120px;
+    left: 32%;
+    top: 90px;
 
     padding: 10px 20px;
 
@@ -32,16 +32,14 @@
     font-size: 18px;
 
     position: relative;
-    display: inline-block;
 
-    left: 20%;
 }
 
 .edit_profile_box li {
     position: relative;
     bottom: 25px;
 
-    margin-top: 25px;
+    margin-top: 40px;
 
 }
 
@@ -54,8 +52,8 @@
     position: relative;
     display: inline-block;
 
-    right: 5%;
-    top: 10%;
+    left: 37%;
+    bottom: 9%;
 
     font-size: 18px;
 }
@@ -66,4 +64,17 @@
     border: 1px solid #138200d7;
     border-radius: 2px;
     padding-right: 22px;
+}
+
+.edit_profile_box .links {
+    position: relative;
+    bottom: 12%;
+    left: 15%;
+
+    margin-top: 10px;
+}
+
+.links li a {
+    color: black;
+    font-size: 16px;
 }

@@ -8,6 +8,8 @@ from the_forum.accounts.models import Profile
 UserModel = get_user_model()
 
 # https://stackoverflow.com/questions/73811593/add-fields-from-another-model-to-the-admin-site
+
+
 @admin.register(UserModel)
 # from django.contrib.auth.admin import UserAdmin was changed to suit the users' info
 class UserAdmin(ModelAdmin):

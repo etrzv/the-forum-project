@@ -148,15 +148,6 @@ def dislike_article(request, article_id):
     return redirect(get_article_url(request, article_id))
 
 
-# @login_required
-# def share_article(request, article_id):
-#     article_details_url = reverse('details article', kwargs={
-#         'pk': article_id
-#     })
-#     pyperclip.copy(article_details_url)
-#     return redirect(get_article_url(request, article_id))
-
-
 @login_required
 def comment_article(request, article_id, user_id):
     article = Article.objects.get(pk=article_id)
@@ -185,62 +176,3 @@ def bookmark_article(request, article_id):
         ArticleBookmark.objects.create(article_id=article_id, user_id=request.user.pk)
     return redirect(get_article_url(request, article_id))
 
-
-#
-# def get_photo_url(request, photo_id):
-#     return request.META['HTTP_REFERER'] + f'#photo-{photo_id}'
-#
-#
-#
-# @login_required
-# def comment_photo(request, photo_id):
-#     photo = Photo.objects.filter(pk=photo_id) \
-#         .get()
-#
-#     form = PhotoCommentForm(request.POST)
-#
-#     if form.is_valid():
-#         comment = form.save(commit=False)  # Does not persist to DB
-#         comment.photo = photo
-#         comment.save()
-
-
-
-
-'''
-
-def show_dashboard(request):
-    profile = get_profile()
-    # get all the photos of the tagged pets for the given user
-    pet_photos = set(
-                PetPhoto.objects
-                .prefetch_related('tagged_pets')
-                .filter(tagged_pets__user_profile=profile))
-    context = {
-        'pet_photos': pet_photos,
-
-    }
-
-    return render(request, 'dashboard.html', context)
-
-
-def show_pet_photo_details(request, pk):
-    pet_photo = PetPhoto.objects\
-        .prefetch_related('tagged_pets')\
-        .get(pk=pk)
-
-    context = {
-        'pet_photo': pet_photo,
-    }
-
-    return render(request, 'photo_details.html', context)
-
-
-def like_pet_photo(request, pk):
-    # like the photo with pk
-    pet_photo = PetPhoto.objects.get(pk=pk)
-    pet_photo.likes += 1
-    pet_photo.save()
-
-    return redirect('pet photo details', pk)
-'''

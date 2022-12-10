@@ -7,14 +7,8 @@
         ><span
         >{{ article.title }}</span
         ></a>
-        {% if is_owner %}
-            <form method="post" action="{% url 'edit article' article.slug %}">
-                <button>Edit</button>
-                {% csrf_token %}
-            </form>
-        {% endif %}
         <div class="article_box_meta">
-            <a href="{% url 'details user' pk=user.pk %}" class="article_box_author_link">{{ article.user.profile.username }}</a>
+            <a href="{% url 'details user' pk=article.user.pk %}" class="article_box_author_link">{{ article.user.profile.username }}</a>
             <time class="article_box_time">{{ article.date_created }}</time>
         </div>
         <div class="article_box_content">
@@ -25,8 +19,8 @@
                   <a href="{% url 'like article' article_id=article.id %}">
                       {% if has_user_liked_article %}
                           <svg
-                                  width="24px"
-                                  height="24px"
+                                  width="22px"
+                                  height="22px"
                                   viewBox="0 0 24 24"
                                   fill="green"
                                   fill-opacity="0.5"
@@ -37,8 +31,8 @@
                           </svg>
                       {% else %}
                           <svg
-                                  width="24px"
-                                  height="24px"
+                                  width="22px"
+                                  height="22px"
                                   viewBox="0 0 24 24"
                                   fill="none"
                                   fill-opacity="0.5"
@@ -91,17 +85,31 @@
                   </a>
                   <div class="dislikes_number">{{ article.dislikes_count }}</div>
               </div>
+
             <div class="bookmark">
-                <a href="{% url 'bookmark article' article_id=article.id %}"><i class="fa-regular fa-bookmark"></i>
-
-{#                    {% if has_user_bookmarked_article %}#}
-{#                        <i class="fa-solid fa-bookmark"></i>#}
-{#                    {% else %}#}
-{#                        <i class="fa-regular fa-bookmark"></i>#}
-{#                    {% endif %}#}
-
+                <a href="{% url 'bookmark article' article_id=article.id %}"
+                   onclick="popupFunction()"
+                   id="myPopup"
+                   title="Popup"
+                >
+                    <i class="fa-regular fa-bookmark">
+                    </i>
+                    <script src="{% static '/css/base/bookmark-popup.js'%}"></script>
                 </a>
+
+{#                <i class="fa-regular fa-bookmark">onclick="myFunction()">Click me!#}
+{#                <span class="popuptext" id="myPopup"></span>#}
+{#                <a href="{% url 'bookmark article' article_id=article.id %}"></i>#}
+{#                </a>#}
             </div>
+            {% if is_owner %}
+                <div class="edit_button">
+                    <form method="post" action="{% url 'edit article' article.slug %}">
+                        <button>Edit</button>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            {% endif %}
         </div>
         </article>
         <div class="add_comment_box">

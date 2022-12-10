@@ -15,18 +15,20 @@
         <a href="{% url 'show index' %}"><h1>The Forum</h1></a>
       </div>
       <nav>
-        <div class="nav">
-            <form class="searchbar" method="get" action="{% url 'show index' %}">
-                <label class="searchbar">
-                  {{ search_form }}
+          <div class="nav">
+              <form class="searchbar" method="get" action="{% url 'show index' %}">
+                  <label class="searchbar">
+                      {{ search_form }}
 {#                  <input type="text" placeholder="Search..." />#}
-                  <button type="submit">
-                      <i class="fa-solid fa-magnifying-glass"></i>
-                  </button>
-                </label>
-            </form>
-        </div>
-
+                      <button type="submit">
+                          <i class="fa-solid fa-magnifying-glass"></i>
+                      </button>
+                  </label>
+              </form>
+          </div>
+{#      <div class="searchbar">#}
+{#          {% include 'base/searchbar.html' %}#}
+{#      </div>#}
         {% if request.user.is_authenticated %}
             <div class="nav">
                 <a href="{% url 'show index' %}">
@@ -54,7 +56,9 @@
       </nav>
     </header>
     <main>
-        <button onclick="topFunction()" id="myBtn" title="Go to top">
+        <button onclick="topFunction()"
+                id="myBtn"
+                title="Go to top">
             <i class="fa-solid fa-arrow-up"></i>
         </button>
         <script src="{% static '/css/base/auto_scroll.js' %}"></script>
