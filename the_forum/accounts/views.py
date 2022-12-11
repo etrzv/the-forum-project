@@ -10,6 +10,7 @@ from django.contrib.auth import update_session_auth_hash
 from the_forum.accounts.forms import UserCreateForm, UserEditForm, PasswordResetForm, UserProfileEditForm, UserDeleteForm
 from the_forum.accounts.models import Profile
 from the_forum.articles.models import Article
+from the_forum.common.forms import SearchArticleForm
 from the_forum.common.models import ArticleBookmark
 
 '''
@@ -26,6 +27,7 @@ UserModel = get_user_model()
 class SignUpView(views.CreateView):
     template_name = 'accounts/register-page.html'
     form_class = UserCreateForm
+    search_form = SearchArticleForm
     success_url = reverse_lazy('show index')
 
     # signing the user in after successful sign up
@@ -34,6 +36,10 @@ class SignUpView(views.CreateView):
         login(self.request, self.object)
         return result
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = self.search_form
+        return context
     #     def form_valid(self, form):
     #         form.instance.user = self.request.user
     #         return super().form_valid(form)
@@ -47,11 +53,22 @@ class SignUpView(views.CreateView):
 # LoginView -> form_class = AuthenticationForm -> username / password
 class SignInView(LoginView):
     template_name = 'accounts/login-page.html'
-    # success_url = reverse_lazy('show index')
+    search_form = SearchArticleForm
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = self.search_form
+        return context
 
 
 class SignOutView(LogoutView):
     next_page = reverse_lazy('show index')
+    search_form = SearchArticleForm
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = self.search_form
+        return context
 
 
 class UserDetailsView(views.DetailView):
@@ -65,6 +82,7 @@ class UserDetailsView(views.DetailView):
     model = UserModel
     # instead of 'object_list' which is used in the html we can customise it
     context_object_name = 'profile'
+    search_form = SearchArticleForm
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -88,13 +106,13 @@ class UserDetailsView(views.DetailView):
         # new = Post.newmanager.filter(favorites=request.user)
 
         is_owner = self.request.user == self.object
-
         context.update({
             'articles': articles,
             # 'user': user,
             # 'user_profile': user_profile,
             'bookmarked_articles': bookmarked_articles,
             'is_owner': is_owner,
+            'search_form': self.search_form,
         })
 
         return context
@@ -109,6 +127,7 @@ class UserEditView(LoginRequiredMixin, views.UpdateView):
     form_class = UserEditForm
     # NEW
     second_form_class = UserProfileEditForm
+    search_form = SearchArticleForm
 
     # TODO: edit with the form or use the model?
     # from - ModelFormMixin
@@ -147,7 +166,8 @@ class UserEditView(LoginRequiredMixin, views.UpdateView):
 
         context.update({
             'form_class': self.form_class(instance=user),
-            'second_form_class': self.second_form_class(instance=profile)
+            'second_form_class': self.second_form_class(instance=profile),
+            'search_form': self.search_form,
         })
 
         return context

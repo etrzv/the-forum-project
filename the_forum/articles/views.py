@@ -10,7 +10,7 @@ from core.utils import apply_likes_count, apply_dislikes_count
 from the_forum.accounts.models import Profile
 from the_forum.articles.forms import ArticleCreateForm, ArticleEditForm, ArticleDeleteForm
 from the_forum.articles.models import Article
-from the_forum.common.forms import ArticleCommentForm
+from the_forum.common.forms import ArticleCommentForm, SearchArticleForm
 from the_forum.common.models import ArticleComment, ArticleLike, ArticleDislike, ArticleBookmark
 
 # Create your views here.
@@ -145,6 +145,7 @@ class ArticleDetailsView(LoginRequiredMixin, DetailView):
     model = Article
     template_name = 'articles/article-details-page.html'
     form_class = ArticleCommentForm
+    search_form = SearchArticleForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -165,11 +166,12 @@ class ArticleDetailsView(LoginRequiredMixin, DetailView):
 
         # comments = ArticleComment.objects.filter(article_id=article.id) # both work
         comments = article.articlecomment_set.all()
+        quantity_comments = len(comments)
         # returns all article related comments
 
-        comment_form = ArticleCommentForm
-
         context.update({
+            'search_form': self.search_form,
+
             'article': article,
             'likes': likes,
             'dislikes': dislikes,
@@ -183,7 +185,8 @@ class ArticleDetailsView(LoginRequiredMixin, DetailView):
             'profile': profile,
 
             'comments': comments,
-            'comment_form': comment_form,
+            'quantity_comments': quantity_comments,
+            'comment_form': self.form_class,
 
         })
 

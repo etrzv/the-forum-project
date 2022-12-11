@@ -19,6 +19,11 @@ body header {
 
 }
 
+body header .logo {
+    display: inline-block;
+}
+
+
 body header .logo a {
     position: relative;
     display: inline-flex;
@@ -35,6 +40,7 @@ body header .logo a {
 
 }
 
+
 nav a {
     text-decoration: none;
     color: black;
@@ -43,19 +49,27 @@ nav a {
     margin-bottom: 10px;
 }
 
+body header .nav {
+    position: relative;
+}
+
 nav .nav {
     position: relative;
     display: inline-block;
-    margin-left: 2%;
     left: 30%;
     bottom: 30px;
+
+    margin-left: 2%;
+
     list-style: none;
 
+
     /*max-width: 90%;*/
+    /*min-width: 80%;*/
 
 }
 
-nav .home, .profile, .settings, .logout {
+nav .home, .profile, .settings, .logout, .login {
     font-size: 16px;
 
     position: relative;
@@ -73,6 +87,10 @@ nav .home, .profile, .settings, .logout {
 
     padding: 10px 40px;
     overflow:hidden;
+}
+
+nav .login {
+    left: 30%;
 }
 
 nav .nav button:hover {
@@ -117,6 +135,17 @@ nav .nav .logout:before {
     transition: all 300ms ease;
 }
 
+
+nav .nav .login:before {
+    font-family: FontAwesome, serif;
+    content:"\f2f5";
+    position: absolute;
+    top: 11px;
+    left: -30px;
+    transition: all 300ms ease;
+}
+
+
 nav .nav button:hover:before {
     left: 12px;
 }
@@ -134,7 +163,7 @@ footer {
 header div .searchbar {
     position: relative;
     display: inline-flex;
-    right: 60%;
+    /*right: 60%;*/
 
     /* padding-left: 6px; */
     margin-top: 8px;

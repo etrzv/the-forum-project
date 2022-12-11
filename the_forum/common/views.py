@@ -19,10 +19,10 @@ UserModel = get_user_model()
 def index(request):
     search_form = SearchArticleForm(request.GET)
     search_pattern = None
-    user = request.user.pk
-
-    if not user:
-        return redirect('login user')
+    # user = request.user.pk
+    #
+    # if not user:
+    #     return redirect('login user')
 
     if search_form.is_valid():
         search_pattern = search_form.cleaned_data['title']
@@ -38,7 +38,7 @@ def index(request):
     context = {
         'articles': articles,
         'search_form': search_form,
-        'user': user,
+        # 'user': user,
         'likes': likes,
         'dislikes': dislikes,
     }
@@ -48,6 +48,7 @@ def index(request):
         'common/home-page.html',
         context,
     )
+
 
 '''
 class HomeView(TemplateView):
