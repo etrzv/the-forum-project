@@ -8,8 +8,11 @@ def apply_dislikes_count(article):
     return article
 
 
-def apply_user_liked_photo(article):
-    # TODO: fix this for current user when authentication is available
-    article.is_liked_by_user = article.likes_count > 0
-    return article
+def apply_likes_count_for_comment(comment):
+    comment.likes_count = comment.commentlike_set.count()
+    return comment
 
+
+def apply_dislikes_count_for_comment(comment):
+    comment.dislikes_count = comment.commentdislike_set.count()
+    return comment

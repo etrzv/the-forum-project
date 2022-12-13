@@ -85,24 +85,15 @@
                       {% endif %}
                   </a>
                   <div class="dislikes_number">{{ article.dislikes_count }}</div>
-              </div>
-
+            </div>
             <div class="bookmark">
                 <a href="{% url 'bookmark article' article_id=article.id %}"
-                   onclick="popupFunction()"
                    id="myPopup"
-                   title="Popup"
-                >
-                    <i class="fa-regular fa-bookmark">
-                    </i>
-                    <script src="{% static '/css/base/bookmark-popup.js'%}"></script>
+                   title="Bookmark">
+                    <i class="fa-regular fa-bookmark"></i>
                 </a>
-
-{#                <i class="fa-regular fa-bookmark">onclick="myFunction()">Click me!#}
-{#                <span class="popuptext" id="myPopup"></span>#}
-{#                <a href="{% url 'bookmark article' article_id=article.id %}"></i>#}
-{#                </a>#}
             </div>
+
             {% if is_owner %}
                 <div class="edit_button">
                     <form method="post" action="{% url 'edit article' article.slug %}">
@@ -113,31 +104,70 @@
             {% endif %}
         </div>
         </article>
-        <div class="add_comment_box">
-            <div class="comment_window">
-                <form method="post" action="{% url 'comment article' article_id=article.id user_id=request.user.pk %}">
-                    {{ comment_form.as_p }}
-                    <button type="submit">Comment</button>
-                    {% csrf_token %}
-                </form>
-
+    <div class="add_comment_box">
+    <div class="comment_window">
+        <form method="post" action="{% url 'comment article' article_id=article.id user_id=request.user.pk %}">
+            {{ comment_form.as_p }}
+            <button type="submit">Comment</button>
+            {% csrf_token %}
+        </form>
+    </div>
+    <div class="comments_box">
+        <div class="quantity_comments"><em>Current number of comments:</em> {{ quantity_comments }}</div>
+        {% for comment in comments %}
+            <div class="comment_info">
+                <ol>
+                    <li class="username">
+                        <a href="{% url 'details user' pk=article.user.pk %}" class="article_box_author_link">{{ comment.user.profile.username }}</a>
+                    </li>
+                    <li class="publication_date">
+                        <em>{{ comment.publication_date }}</em>
+                    </li>
+                    <li class="content">
+                        {{ comment.text }}
+                    </li>
+                    <li>
+                        <div class="buttons">
+                            <div class="like">
+                                <a href="{% url 'like comment' article_id=article.id comment_id=comment.id %}">
+                                    <svg
+                                            width="22px"
+                                            height="22px"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            fill-opacity="0.5"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                                d="M7.08409 10.6629L10.3393 3.23907C10.79 2.21121 11.9999 1.68012 12.9811 2.2056C14.5081 3.0234 14.2018 3.78995 14.2018 8.60158H19.9659C21.2123 8.60158 22.1654 9.72766 21.9759 10.9763L20.568 20.2521C20.4154 21.2577 19.5618 22 18.558 22H7.08409M7.08409 10.6629V22M7.08409 10.6629H4.03364C2.91049 10.6629 2 11.5857 2 12.7242V19.9387C2 21.0771 2.91049 22 4.03364 22L7.08409 22" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        </path>
+                                    </svg>
+                                    <div class="likes_number">{{ comment.likes_count }}</div>
+                                </a>
+                            </div>
+                            <div class="dislike">
+                                <a href="{% url 'dislike comment' article_id=article.id comment_id=comment.id %}">
+                                    <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="24"
+                                            height="21"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                    >
+                                        <path
+                                                d="M10 15v4a3 3 0 003 3l4-9V2H5.72a2 2 0 00-2 1.7l-1.38 9a2 2 0 002 2.3zm7-13h2.67A2.31 2.31 0 0122 4v7a2.31 2.31 0 01-2.33 2H17">
+                                        </path>
+                                    </svg>
+                                    <div class="dislikes_number">{{ comment.dislikes_count }}</div>
+                                </a>
+                            </div>
+                    </li>
+                </ol>
             </div>
-
-            <div class="comments_box">
-            {{ quantity_comments }}
-                {% for comment in comments %}
-                    <ol>
-                        <li class="username">
-                            <b>{{ comment.user.profile.username }}</b>
-                        </li>
-                        <li class="publication_date">
-                            <em>{{ comment.publication_date }}</em>
-                        </li>
-                        <li class="content">
-                            {{ comment.text }}
-                        </li>
-                    </ol>
                 {% endfor %}
-            </div>
         </div>
+    </div>
 {% endblock %}

@@ -6,12 +6,13 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 
-from core.utils import apply_likes_count, apply_dislikes_count
+from core.utils import apply_likes_count, apply_dislikes_count, apply_likes_count_for_comment, \
+    apply_dislikes_count_for_comment
 from the_forum.accounts.models import Profile
 from the_forum.articles.forms import ArticleCreateForm, ArticleEditForm, ArticleDeleteForm
 from the_forum.articles.models import Article
 from the_forum.common.forms import ArticleCommentForm, SearchArticleForm
-from the_forum.common.models import ArticleComment, ArticleLike, ArticleDislike, ArticleBookmark
+from the_forum.common.models import ArticleComment, ArticleLike, ArticleDislike, ArticleBookmark, CommentLike
 
 # Create your views here.
 
@@ -70,12 +71,14 @@ class ArticleEditView(LoginRequiredMixin, UpdateView):
     model = Article
     template_name = 'articles/article-edit-page.html'
     form_class = ArticleEditForm
+    search_form = SearchArticleForm
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
         article = self.model.objects.get(slug=self.object.slug)
         context.update({
             'form_class': self.form_class(instance=article),
+            'search_form': self.search_form,
         })
         return context
 
@@ -117,28 +120,28 @@ def get_queryset(self):
 # def edit_article(request, username, article_slug):
 #     article = Article.objects.filter(slug=article_slug).get()
 
-    # # if not is_owner(request, article):
-    # #     return redirect('details pet', username=username, pet_slug=pet_slug)
-    #
-    # if request.method == 'GET':
-    #     form = ArticleEditForm(instance=article)
-    # else:
-    #     form = ArticleEditForm(request.POST, instance=article)
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect('show index', username=username, article_slug=article_slug)
-    #
-    # context = {
-    #     'form': form,
-    #     'article_slug': article_slug,
-    #     'username': username,
-    # }
-    #
-    # return render(
-    #     request,
-    #     'articles/article-edit-page.html',
-    #     context,
-    # )
+# # if not is_owner(request, article):
+# #     return redirect('details pet', username=username, pet_slug=pet_slug)
+#
+# if request.method == 'GET':
+#     form = ArticleEditForm(instance=article)
+# else:
+#     form = ArticleEditForm(request.POST, instance=article)
+#     if form.is_valid():
+#         form.save()
+#         return redirect('show index', username=username, article_slug=article_slug)
+#
+# context = {
+#     'form': form,
+#     'article_slug': article_slug,
+#     'username': username,
+# }
+#
+# return render(
+#     request,
+#     'articles/article-edit-page.html',
+#     context,
+# )
 
 
 class ArticleDetailsView(LoginRequiredMixin, DetailView):
@@ -167,7 +170,11 @@ class ArticleDetailsView(LoginRequiredMixin, DetailView):
         # comments = ArticleComment.objects.filter(article_id=article.id) # both work
         comments = article.articlecomment_set.all()
         quantity_comments = len(comments)
-        # returns all article related comments
+        comment_likes = [apply_likes_count_for_comment(comment) for comment in comments]
+        comment_dislikes = [apply_dislikes_count_for_comment(comment) for comment in comments]
+
+        # user_likes_comments = CommentLike.objects.filter(comment(comment_id=comment.id, user_id=user.pk)
+        #                                                  for comment in comments)
 
         context.update({
             'search_form': self.search_form,
@@ -176,17 +183,18 @@ class ArticleDetailsView(LoginRequiredMixin, DetailView):
             'likes': likes,
             'dislikes': dislikes,
 
+            'user': user,
+            'profile': profile,
             'is_owner': article.user == self.request.user,
             'has_user_liked_article': user_likes_articles,
             'has_user_disliked_article': user_dislikes_articles,
-            # 'has_user_bookmarked_article': user_bookmarks_articles,
-
-            'user': user,
-            'profile': profile,
 
             'comments': comments,
             'quantity_comments': quantity_comments,
             'comment_form': self.form_class,
+            'comment_likes': comment_likes,
+            'comment_dislikes': comment_dislikes,
+            # 'user_likes_comments': user_likes_comments,
 
         })
 
@@ -198,6 +206,12 @@ class ArticleDeleteView(LoginRequiredMixin, DeleteView):
     model = Article
     success_url = reverse_lazy('show index')
     form_class = ArticleDeleteForm
+    search_form = SearchArticleForm
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = self.search_form
+        return context
 
 
 '''

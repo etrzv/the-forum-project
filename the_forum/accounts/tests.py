@@ -1,85 +1,27 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
+from django.urls import reverse
 
-# Create your tests here.
+from the_forum.accounts.models import Profile
 
-'''
-class User(models.Model):
-    .
-    .
-    def __str__(self):
-        return self.nombre_del_sitio
-
-class Profile(models.Model):
-    User = models.ForeignKey(User, on_delete=models.CASCADE)
-    .
-    .
-    def __str__(self):
-        return self.User.nombre_del_sitio
-        
-        
-
-class ProfileForm(forms.ModelForm):
-
-    class Meta:
-        model = Profile
-        exclude = ['slug',]
-        widgets = {
-        'fecha_de_contratacion' : forms.DateInput(attrs={
-          'type' : 'date',
-          'class' : "form-control pull-right",
-          'id' : "fechadecon",
-           }),
-        'User' : forms.Select(attrs={
-          'type' : 'text',
-          'class' : "form-control",
-          'id' : 'nombresitio',
-          }),
-          .
-          .
-        }
+UserModel = get_user_model()
 
 
-class CrearSitiosContratadosView(CreateView):
-    model = Profile
-    template_name = 'sitios/contratados/editar_contratado.html'
-    form_class = ProfileForm
-    success_url = reverse_lazy('pagina:tabla_contratados')
+class SignInViewTests(TestCase):
+    VALID_USER_DATA = {
+        'first_name': 'first name',
+        'last_name': 'last name',
+        'username': 'test_username',
+        'email': 'test@user.com',
+        'password1': 'password',
+        'password2': 'password',
+    }
 
-class UpdateSitiosContratadosView(UpdateView):
-    model = Profile
-    second_model = User
-    template_name = 'sitios/contratados/editar_contratado.html'
-    form_class = ProfileForm
-    second_form_class = UserForm
-    success_url = reverse_lazy('pagina:tabla_contratados')
+    def test_sign_up__when_valid_data__expect_logged_in_user(self):
+        response = self.client.post(
+            reverse('login user'),
+            data=self.VALID_USER_DATA,
+        )
 
-    def get_context_data(self, **kwargs):
-        context = super(UpdateSitiosContratadosView, self).get_context_data(**kwargs)
-        pk = self.kwargs.get('pk', 0)
-        Profile = self.model.objects.get(id=pk)
-        User = self.second_model.objects.get(id=Profile.User_id)
-        if 'form' not in context:
-            context['form'] = self.form_class()
-        if 'form2' not in context:
-            context['form2'] = self.second_form_class(instance=User)
-            context['form2'] = self.second_form_class(instance=request.Profile.sitioproyecto)
+        self.assertEqual(self.VALID_USER_DATA['email'], response.context['user'].username)
 
-        context['id'] = pk
-        return context
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object
-        id_Profile = kwargs['pk']
-        Profile = self.model.objects.get(id=id_Profile)
-        User = self.second_model.objects.get(id=Profile.User_id)
-        form = self.form_class(request.POST, instance=Profile)
-        form2 = self.second_form_class(request.POST, instance=User)
-        if form.is_valid() and form2.is_valid():
-            form.save()
-            form2.save()
-            return HttpResponseRedirect(self.get_success_url())
-        else:
-            return self.render_to_response(self.get_context_data(form=form, form2=form2))
-
-
-'''

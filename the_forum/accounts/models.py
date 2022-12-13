@@ -36,6 +36,7 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    # is_verified = models.BooleanField(default=False)
     # auto_now: changes on creation and modification.
     # auto_now_add: changes once on creation only.
     date_joined = models.DateTimeField(auto_now_add=True)

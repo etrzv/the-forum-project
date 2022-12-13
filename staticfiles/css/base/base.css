@@ -36,7 +36,7 @@ body header .logo a {
 
     background-color: #8b3a3ad7;
     color: white;
-    /* font-family: Snell Roundhand, cursive; */
+    /*font-family: Snell Roundhand, cursive;*/
 
 }
 
@@ -59,7 +59,7 @@ nav .nav {
     left: 30%;
     bottom: 30px;
 
-    margin-left: 2%;
+    margin-left: 5.8%;
 
     list-style: none;
 
@@ -174,7 +174,7 @@ header div .searchbar {
 
 header div .searchbar button {
     position: relative;
-    right: 41px;
+    right: 34px;
     font-size: 20px;
     border: 2px solid #8b3a3ad7;
     border-radius: 5px;

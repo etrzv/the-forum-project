@@ -38,6 +38,7 @@
 .edit_profile_box li {
     position: relative;
     bottom: 25px;
+    left: 9%;
 
     margin-top: 40px;
 
@@ -60,8 +61,8 @@
 
 .edit_profile_box button:hover {
     color: white;
-    background-color: #138200d7;
-    border: 1px solid #138200d7;
+    background-color: #009F68;
+    border: 1px solid #009F68;
     border-radius: 2px;
     padding-right: 22px;
 }
@@ -69,9 +70,8 @@
 .edit_profile_box .links {
     position: relative;
     bottom: 12%;
-    left: 15%;
-
-    margin-top: 10px;
+    left: 7%;
+    /*margin-top: 10px;*/
 }
 
 .links li a {

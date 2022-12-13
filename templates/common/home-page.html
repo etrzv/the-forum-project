@@ -2,7 +2,6 @@
 {% block page_content %}
 {% load static %}
     <link rel="stylesheet" href="{% static 'css/common/home-page.css' %}" />
-    <main>
         {% for article in articles %}
             <article class="article_box">
                 <a href="{% url 'details article' article.slug %}" class="article_box_header_link"
@@ -72,5 +71,4 @@
                 </div>
             </article>
         {% endfor %}
-    </main>
 {% endblock %}

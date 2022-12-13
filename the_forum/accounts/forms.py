@@ -46,7 +46,7 @@ class UserCreateForm(UserCreationForm):
 
 
 class UserEditForm(UserChangeForm):
-    password = ReadOnlyPasswordHashField()
+    # password = ReadOnlyPasswordHashField()
 
     class Meta:
         model = UserModel
@@ -67,6 +67,10 @@ class UserProfileEditForm(UserChangeForm):
     class Meta:
         model = Profile
         fields = ('username', 'first_name', 'last_name', )
+
+    def save(self, commit=True):
+        self.instance.save()
+        return self.instance
 
 
 class PasswordResetForm(PasswordChangeForm):

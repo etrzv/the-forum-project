@@ -4,7 +4,6 @@
 {% load placeholders %}
 {% load static %}
     <link rel="stylesheet" href="{% static 'css/accounts/profile-edit-page.css' %}" />
-
     <form method="post" action="{% url 'edit user' pk=request.user.pk %}">
         <div class="edit_profile_box">
             <h2>Edit your profile here:</h2>

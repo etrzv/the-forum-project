@@ -4,9 +4,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views import generic as views
 
 from django.contrib.auth import update_session_auth_hash
+from django.views.generic import UpdateView, DetailView, CreateView, DeleteView
+
 from the_forum.accounts.forms import UserCreateForm, UserEditForm, PasswordResetForm, UserProfileEditForm, UserDeleteForm
 from the_forum.accounts.models import Profile
 from the_forum.articles.models import Article
@@ -24,7 +25,7 @@ then looks at the request and decides whether the GET or POST method of the view
 UserModel = get_user_model()
 
 
-class SignUpView(views.CreateView):
+class SignUpView(CreateView):
     template_name = 'accounts/register-page.html'
     form_class = UserCreateForm
     search_form = SearchArticleForm
@@ -71,7 +72,7 @@ class SignOutView(LogoutView):
         return context
 
 
-class UserDetailsView(views.DetailView):
+class UserDetailsView(DetailView):
     """
     Render a "detail" view of an object.
     By default, this is a model instance looked up from `self.queryset`, but the
@@ -100,11 +101,6 @@ class UserDetailsView(views.DetailView):
 
         bookmarked_articles = ArticleBookmark.objects.filter(user_id=self.object.pk)
 
-        # bookmarked_articles = self.object.articlebookmark_set.filter(article_id=)
-        # bookmarked_articles = ArticleBookmark.objects.filter(article_id=self.object.pk)
-        #       Article
-        # new = Post.newmanager.filter(favorites=request.user)
-
         is_owner = self.request.user == self.object
         context.update({
             'articles': articles,
@@ -118,25 +114,21 @@ class UserDetailsView(views.DetailView):
         return context
 
 
-class UserEditView(LoginRequiredMixin, views.UpdateView):
-    template_name = 'accounts/profile-edit-page.html'
+class UserEditView(LoginRequiredMixin, UpdateView):
     model = UserModel
-    # NEW
     second_model = Profile
-    # fields = ('email', )
+    template_name = 'accounts/profile-edit-page.html'
+
     form_class = UserEditForm
-    # NEW
     second_form_class = UserProfileEditForm
+
     search_form = SearchArticleForm
 
     # TODO: edit with the form or use the model?
     # from - ModelFormMixin
     # Determine the URL to redirect to when the form is successfully validated.
     # Returns success_url by default
-    def get_success_url(self):
-        return reverse_lazy('edit user', kwargs={
-            'pk': self.request.user.pk,
-        })
+
     # ProcessFormView
     """Handle GET requests: instantiate a blank version of the form."""
 
@@ -149,20 +141,6 @@ class UserEditView(LoginRequiredMixin, views.UpdateView):
         context = super().get_context_data(**kwargs)
         user = self.model.objects.get(id=self.request.user.pk)
         profile = self.second_model.objects.get(user_id=user.pk)
-        '''
-        # user = UserModel.objects.filter(id=self.request.user.pk).get()
-        user_profile = UserProfileEditForm(instance=self.request.user)  # / instance=self.request.user.pk
-        user_form = UserEditForm(instance=self.request.user)
-        # user_profile_form = UserProfileEditForm(instance=self.request.user.pk)
-
-        context = super().get_context_data(**kwargs)
-        context.update({
-            # 'user': user.get_profile,
-            'user_profile': user_profile,
-            'user_form': user_form,
-            # 'user_profile_form': user_profile_form,
-        })
-        return context'''
 
         context.update({
             'form_class': self.form_class(instance=user),
@@ -175,23 +153,55 @@ class UserEditView(LoginRequiredMixin, views.UpdateView):
     def post(self, request, *args, **kwargs):
         user = self.model.objects.get(id=self.request.user.pk)
         profile = self.second_model.objects.get(user_id=user.pk)
+
         form = self.form_class(request.POST, instance=user)
-        second_form = self.form_class(request.POST, instance=profile)
+        second_form = self.second_form_class(request.POST, instance=profile)
+
         if form.is_valid() and second_form.is_valid():
             form.save()
             second_form.save()
             return redirect(self.get_success_url())
 
+    def get_success_url(self):
+        return reverse_lazy('edit user', kwargs={
+            'pk': self.request.user.pk,
+        })
 
-class UserDeleteView(LoginRequiredMixin, views.DeleteView):
+
+
+'''
+        # user = UserModel.objects.filter(id=self.request.user.pk).get()
+        user_profile = UserProfileEditForm(instance=self.request.user)  # / instance=self.request.user.pk
+        user_form = UserEditForm(instance=self.request.user)
+        # user_profile_form = UserProfileEditForm(instance=self.request.user.pk)
+
+        context = super().get_context_data(**kwargs)
+        context.update({
+            # 'user': user.get_profile,
+            'user_profile': user_profile,
+            'user_form': user_form,
+            # 'user_profile_form': user_profile_form,
+        })
+        return context
+'''
+
+
+class UserDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'accounts/profile-delete-page.html'
     model = UserModel
     success_url = reverse_lazy('show index')
     form_class = UserDeleteForm
+    search_form = SearchArticleForm
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = self.search_form
+        return context
 
 
 def change_password_view(request, pk):
     user = UserModel.objects.get(pk=pk)
+    search_form = SearchArticleForm
     if request.method == 'POST':
         form = PasswordResetForm(user, request.POST)
         if form.is_valid():
@@ -208,6 +218,7 @@ def change_password_view(request, pk):
 
     context = {
         'form': form,
+        'search_form': search_form,
     }
 
     return render(request, 'accounts/profile-password-change.html', context)

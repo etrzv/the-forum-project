@@ -1,5 +1,6 @@
+import os
+import environ
 from pathlib import Path
-
 from django.urls import reverse_lazy
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,6 +10,9 @@ SECRET_KEY = 'django-insecure-44=o!ukczrlu$_yxiuvn=ko&g*wty2_ufvxls(d1uvyh^xuz)b
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+env = environ.Env()
+environ.Env.read_env()
 
 
 INSTALLED_APPS = [
@@ -58,14 +62,15 @@ WSGI_APPLICATION = 'the_forum.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'the_forum_db_2',
-        'USER': 'postgres',
-        'PASSWORD': '1123QwER',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'ENGINE': env('DB_ENGINE'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     # {
@@ -85,7 +90,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'CET'
 
 USE_I18N = True
 
@@ -107,3 +112,16 @@ AUTH_USER_MODEL = 'accounts.AppUser'
 LOGIN_REDIRECT_URL = reverse_lazy('show index')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if DEBUG:
+    EMAIL_HOST = env('EMAIL_HOST')
+    EMAIL_PORT = env('EMAIL_PORT')
+    EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+else:
+    pass
+#     EMAIL_BACKEND = 'django_mailjet.backends.MailjetBackend'
+#     MAILJET_API_KEY = os.environ.get('EMAIL_HOST_USER')
+#     MAILJET_API_SECRET = os.environ.get('EMAIL_HOST_PASSWORD')
+
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
