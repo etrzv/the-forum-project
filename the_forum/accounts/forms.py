@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth import forms as auth_forms, get_user_model
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, UsernameField, ReadOnlyPasswordHashField, \
     PasswordChangeForm
+from django.core.exceptions import ValidationError
 
 from the_forum.accounts.models import Profile
 
@@ -12,6 +13,9 @@ class UserCreateForm(UserCreationForm):
     first_name = forms.CharField()
     last_name = forms.CharField()
     username = forms.CharField()
+    # TODO: added
+    # password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+    # password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
 
     # class UserCreateForm(auth_forms.UserCreationForm):
     #     class Meta:
@@ -27,11 +31,22 @@ class UserCreateForm(UserCreationForm):
         # is a dictionary of model field names mapped to a form field class.
         # field_classes = {'email': auth_forms.UsernameField}
 
+    # TODO: added
+    # def clean_password2(self):
+    #     # Check that the two password entries match
+    #     password1 = self.cleaned_data.get("password1")
+    #     password2 = self.cleaned_data.get("password2")
+    #     if password1 and password2 and password1 != password2:
+    #         raise ValidationError("Passwords don't match")
+    #     return password2
+
     def save(self, commit=True):
         user = super(UserCreateForm, self).save(commit=commit)
         first_name = self.cleaned_data['first_name']
         last_name = self.cleaned_data['last_name']
         username = self.cleaned_data['username']
+        # TODO: added
+        # user.set_password(self.cleaned_data["password1"])
         profile = Profile(
             first_name=first_name,
             last_name=last_name,
@@ -46,14 +61,17 @@ class UserCreateForm(UserCreationForm):
 
 
 class UserEditForm(UserChangeForm):
-    # password = ReadOnlyPasswordHashField()
+    # TODO: Changed for the admin site
+    password = ReadOnlyPasswordHashField()
 
     class Meta:
         model = UserModel
+        # TODO: changed
         fields = ('email', )
-        exclude = ('password', )
+        # exclude = ('password', )
         field_classes = {
             'email': auth_forms.UsernameField,
+
         }
 
     # def clean_password(self):

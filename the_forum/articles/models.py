@@ -34,11 +34,17 @@ class Article(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
 
     # Search, Engine Optimisation
+    # If the field is also unique, though, you'll have to use null=True to prevent multiple empty strings
+    # from failing the uniqueness check
     slug = models.SlugField(
         unique=True,
         null=False,
         blank=True,
+        # the form does not require a value but the DB does
     )
+    # null=True,
+    # blank=False,
+    # the form requires it, the DB does not - for values from users that are not required by the business logic
 
     user = models.ForeignKey(
         UserModel,
@@ -55,4 +61,4 @@ class Article(models.Model):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.date_created, self.date_modified
+        return self.title

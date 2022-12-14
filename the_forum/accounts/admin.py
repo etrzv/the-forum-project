@@ -1,8 +1,8 @@
 from django.contrib import admin
-from django.contrib.admin import ModelAdmin
 from django.contrib.auth import get_user_model
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from the_forum.accounts.forms import UserEditForm, UserCreateForm
+from the_forum.accounts.forms import UserEditForm, UserCreateForm, UserProfileEditForm
 from the_forum.accounts.models import Profile
 
 UserModel = get_user_model()
@@ -11,32 +11,29 @@ UserModel = get_user_model()
 
 
 @admin.register(UserModel)
-# from django.contrib.auth.admin import UserAdmin was changed to suit the users' info
-class UserAdmin(ModelAdmin):
-    # form = UserEditForm
-    form = UserCreateForm
+class UserAdministration(admin.ModelAdmin):
+    add_form = UserCreateForm
+    change_form = UserEditForm
+    profile_change_form = UserProfileEditForm
 
     list_display = ('email', 'is_staff', 'is_superuser', 'is_active')  # what appears on the search bar above the users
     list_filter = ('is_staff', 'is_superuser', )    # filter on the right
     search_fields = ('email', )
 
-    # for editing
     fieldsets = (
         (
             'Mandatory Information:',
             {
                 'fields': (
                     'email',
-                    'password1',
-                    'password2',
                 ),
-            }),
+            }
+        ),
         (
             'Important dates:',
             {
                 'fields': (
                     'last_login',
-                    'date_joined',
                 ),
             },
         ),
@@ -46,22 +43,41 @@ class UserAdmin(ModelAdmin):
                 'fields': (
                     'is_staff',
                     'is_superuser',
+                    'is_active',
+                    'groups',
+                    'user_permissions',
                 ),
-            }),
+            }
+        ),
     )
 
-    # for creating
     add_fieldsets = (
         (
-            None,
+            'Mandatory Information:',
             {
                 'classes': ('wide', ),
                 'fields': (
                     'email',
-                    'password',
-                    # 'password2',
+                    'password1',
+                    'password2',
+                    # 'first_name',
+                    # 'last_name',
+                    # 'username',
                 ),
-            }),
+            }
+         ),
+        (
+            'Permissions:',
+            {
+                'fields': (
+                    'is_staff',
+                    'is_superuser',
+                    'is_active',
+                    'groups',
+                    'user_permissions',
+                ),
+            }
+        ),
     )
 
     def get_form(self, request, obj=None, **kwargs):
@@ -69,7 +85,18 @@ class UserAdmin(ModelAdmin):
         Return a Form class for use in the admin add view. This is used by
         add_view and change_view.
         """
-        return super().get_form(request, obj, **kwargs)
+        if not obj:
+            self.form = self.add_form
+        else:
+            self.form = self.change_form
 
+        return super(UserAdministration, self).get_form(request, obj, **kwargs)
 
-
+    def get_fieldsets(self, request, obj=None):
+        if not obj:
+            fieldsets = self.add_fieldsets
+            return fieldsets
+        else:
+            fieldsets = self.fieldsets
+            return fieldsets
+        # return super(UserAdministration, self).get_fieldsets(request, obj)

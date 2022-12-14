@@ -26,7 +26,7 @@ this information is needed only for the login:
 # UserModel = get_user_model()
 
 class AppUser(AbstractBaseUser, PermissionsMixin):
-    EMAIL_MAX_LEN = 15
+    EMAIL_MAX_LEN = 35
 
     email = models.EmailField(
         max_length=EMAIL_MAX_LEN,

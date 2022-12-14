@@ -36,10 +36,10 @@
 
     font-size: 18px;
 
-    margin-top: 25px;
+    margin-top: 30px;
 }
 
-.created_articles {
+.article_box {
     display: inline-block;
     position: relative;
     border: 2px solid black;
@@ -58,11 +58,35 @@
     min-height: 320px;
 }
 
-.created_articles li {
+.article_box h2 {
+    display: inline-block;
+    position: relative;
+
+    left: 22%;
+    top: 2%;
+}
+
+.article_box li {
     list-style: none;
-    margin-top: 10px;
+    display: block;
+    position: relative;
+
+    /*left: 20%;*/
+    top: 2%;
+
+    font-size: 18px;
+
+    margin-top: 30px;
+}
+
+.article_box li a {
+    color: black;
 }
 
 .bookmarked_articles li {
     list-style: none;
+}
+
+.bookmarked_articles li a {
+    color: black;
 }

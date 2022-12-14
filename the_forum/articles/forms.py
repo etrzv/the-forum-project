@@ -7,7 +7,7 @@ from the_forum.common.models import ArticleLike, ArticleDislike, ArticleComment,
 class ArticleCreateForm(forms.ModelForm):
     class Meta:
         model = Article
-        fields = ('title', 'photo', 'content', )
+        fields = ('title', 'photo', 'content', 'id', 'slug')
 
         # labels = {
         #     "title": "Article's Title",

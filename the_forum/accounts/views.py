@@ -8,7 +8,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth import update_session_auth_hash
 from django.views.generic import UpdateView, DetailView, CreateView, DeleteView
 
-from the_forum.accounts.forms import UserCreateForm, UserEditForm, PasswordResetForm, UserProfileEditForm, UserDeleteForm
+from the_forum.accounts.forms import UserCreateForm, UserEditForm, PasswordResetForm, UserProfileEditForm, \
+    UserDeleteForm
 from the_forum.accounts.models import Profile
 from the_forum.articles.models import Article
 from the_forum.common.forms import SearchArticleForm
@@ -140,13 +141,21 @@ class UserEditView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.model.objects.get(id=self.request.user.pk)
-        profile = self.second_model.objects.get(user_id=user.pk)
 
-        context.update({
-            'form_class': self.form_class(instance=user),
-            'second_form_class': self.second_form_class(instance=profile),
-            'search_form': self.search_form,
-        })
+        # TODO: change
+        try:
+            profile = self.second_model.objects.get(user_id=user.pk)
+
+            context.update({
+                'form_class': self.form_class(instance=user),
+                'second_form_class': self.second_form_class(instance=profile),
+                'search_form': self.search_form,
+            })
+        except:
+            context.update({
+                'form_class': self.form_class(instance=user),
+                'search_form': self.search_form,
+            })
 
         return context
 
@@ -166,7 +175,6 @@ class UserEditView(LoginRequiredMixin, UpdateView):
         return reverse_lazy('edit user', kwargs={
             'pk': self.request.user.pk,
         })
-
 
 
 '''
