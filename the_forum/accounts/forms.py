@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm, Username
 from django.core.exceptions import ValidationError
 
 from the_forum.accounts.models import Profile
+from the_forum.accounts.tasks import send_welcome_email_to_new_users
 
 UserModel = get_user_model()
 
@@ -58,6 +59,7 @@ class UserCreateForm(UserCreationForm):
             profile.save()
 
         return user
+
 
 
 class UserEditForm(UserChangeForm):

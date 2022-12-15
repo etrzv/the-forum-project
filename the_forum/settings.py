@@ -3,16 +3,17 @@ import environ
 from pathlib import Path
 from django.urls import reverse_lazy
 
+env = environ.Env()
+environ.Env.read_env()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-44=o!ukczrlu$_yxiuvn=ko&g*wty2_ufvxls(d1uvyh^xuz)b'
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
-env = environ.Env()
-environ.Env.read_env()
+ALLOWED_HOSTS = ('127.0.0.1', 'localhost', )
+# ALLOWED_HOSTS = (env('ALLOWED_HOSTS').split(' '), )
 
 
 INSTALLED_APPS = [
@@ -125,3 +126,10 @@ else:
 #     MAILJET_API_SECRET = os.environ.get('EMAIL_HOST_PASSWORD')
 
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+# results / history of the tasks - may not be the same location
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+# CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TASK_SERIALIZER = 'json'

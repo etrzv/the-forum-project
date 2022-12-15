@@ -17,8 +17,8 @@
         <div class="article_box">
             <h2>Profile's Articles:</h2>
             <ol>
-                {% if articles %}
-                    <div class="created_articles">
+                <div class="created_articles">
+                    {% if articles %}
                         <h3>Created Articles:</h3>
                         {% for article in articles %}
                             <ol>
@@ -28,20 +28,15 @@
                                         {{ article.title }}
                                     </a>
                                 </li>
-{#                        {% if article.photo %}#}
-{#                            <li class="photo">#}
-{#                                <b>Link to image:</b>#}
-{#                                {{ article.photo }}#}
-{#                            </li>#}
-{#                        {% endif %}#}
                             </ol>
                         {% endfor %}
-                        {% else %}
+                    {% else %}
                         <h3>No created articles</h3>
-                    </div>
-                {% endif %}
-                {% if bookmarked_articles %}
-                    <div class="bookmarked_articles">
+                    {% endif %}
+                </div>
+                <div class="bookmarked_articles">
+                    {% if bookmarked_articles %}
+
                         <h3>Bookmarked Articles:</h3>
                         <ol>
                             {% for b_article in bookmarked_articles %}
@@ -53,10 +48,11 @@
                                 </li>
                             {% endfor %}
                         </ol>
-                    </div>
-                {% else %}
-                    <h3>No bookmarked articles</h3>
-                {% endif %}
+                    {% else %}
+                        <h3>No bookmarked articles</h3>
+                    {% endif %}
+                </div>
+
                 <button type="submit">Create</button>
                 {% csrf_token %}
             </ol>

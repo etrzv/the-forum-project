@@ -1,0 +1,117 @@
+@import 'https://use.fontawesome.com/releases/v6.2.0/css/all.css';
+
+/*body {*/
+/*    min-height: 100vh;*/
+/*    max-height: 200px;*/
+/*}*/
+
+/* Welcome to The Forum */
+.welcome, .to {
+    position: relative;
+    display: inline-flex;
+    font-size: 20px;
+
+    width: 50%;
+    /*height: 30px;*/
+}
+
+body .welcome {
+    left: 10%;
+    top: 2%;
+
+}
+
+.welcome h2 {
+    display: inline-flex;
+
+    left: 10%;
+    width: 200px;
+    height: 50px;
+    margin-bottom: -30px;
+}
+
+body .to {
+    right: 10%;
+    top: 8%;
+}
+
+.to h2 {
+    display: inline-flex;
+    bottom: 20px;
+    width: 200px;
+    margin-top: 50px;
+}
+
+
+/* Login Box */
+
+main .container {
+    position: relative;
+    display: inline-flex;
+    left: 35%;
+    /*top: 10px;*/
+
+    border: 2px solid black;
+    border-radius: 5px;
+
+    margin-top: 30px;
+    padding: 20px;
+    box-shadow: 5px 5px 10px 2px rgba(0,0,0,.8);
+
+    width: 30%;
+    height: 800px;
+
+}
+
+.container ol {
+    position: relative;
+    /*display: inline-flex;*/
+    top: 20%;
+    right: 85%;
+    height: 200px;
+}
+
+.container li {
+    font-size: 20px;
+    position: relative;
+    display: inline-flex;
+    margin-top: 20px;
+}
+
+ol .box {
+    position: relative;
+    margin-left: 5px;
+    bottom: 3px;
+
+}
+
+body .container li {
+    list-style: none;
+    padding: 10px;
+}
+
+.container button {
+    position: relative;
+    font-size: 20px;
+    margin: 5px;
+    left: 80%;
+}
+
+.container button:hover {
+    background-color: #009F68;
+    color: white;
+    border: 0;
+    border-radius: 5px;
+    padding: 3px 8px;
+}
+
+main .second-option p {
+    position: relative;
+    display: inline-flex;
+    font-size: 16px;
+    bottom: 45%;
+}
+
+main .second-option a {
+    margin-left: 5px;
+}

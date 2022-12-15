@@ -42,6 +42,7 @@ class SignUpView(CreateView):
         context = super().get_context_data(**kwargs)
         context['search_form'] = self.search_form
         return context
+
     #     def form_valid(self, form):
     #         form.instance.user = self.request.user
     #         return super().form_valid(form)
@@ -141,21 +142,13 @@ class UserEditView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.model.objects.get(id=self.request.user.pk)
+        profile = self.second_model.objects.get(user_id=user.pk)
 
-        # TODO: change
-        try:
-            profile = self.second_model.objects.get(user_id=user.pk)
-
-            context.update({
-                'form_class': self.form_class(instance=user),
-                'second_form_class': self.second_form_class(instance=profile),
-                'search_form': self.search_form,
-            })
-        except:
-            context.update({
-                'form_class': self.form_class(instance=user),
-                'search_form': self.search_form,
-            })
+        context.update({
+            'form_class': self.form_class(instance=user),
+            'second_form_class': self.second_form_class(instance=profile),
+            'search_form': self.search_form,
+        })
 
         return context
 
@@ -230,3 +223,4 @@ def change_password_view(request, pk):
     }
 
     return render(request, 'accounts/profile-password-change.html', context)
+

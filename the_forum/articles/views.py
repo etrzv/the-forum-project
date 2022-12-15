@@ -194,6 +194,8 @@ class ArticleDetailsView(LoginRequiredMixin, DetailView):
             'comment_form': self.form_class,
             'comment_likes': comment_likes,
             'comment_dislikes': comment_dislikes,
+            'is_comment_owner': article.user == self.request.user,
+
             # 'user_likes_comments': user_likes_comments,
 
         })
