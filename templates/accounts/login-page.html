@@ -16,16 +16,20 @@
                         <h2>The Forum</h2>
                     </div>
                     <ol>
+                        {% for error in form.username.errors %}
+                            <div class="error">{{ error }}</div>
+                        {% endfor %}
                         <li class="uname">
                             <b>Email:</b>
-                            {{ form.username.errors }}
                             <div class="box">{{ form.username|placeholder:'Email' }}</div>
                         </li>
                         <li class="pws">
                             <b>Password: </b>
-                            {{ form.password.errors }}
                             <div class="box">{{ form.password|placeholder:'Password' }}</div>
                         </li>
+                        {% for error in form.password.errors %}
+                                <div class="error">{{ error }}</div>
+                        {% endfor %}
                         <li>
                             <input type="hidden" name="next" value="{{ next }}">
                             <button type="submit">Login</button>

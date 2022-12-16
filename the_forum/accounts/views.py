@@ -2,12 +2,14 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
 from django.contrib.auth import update_session_auth_hash
 from django.views.generic import UpdateView, DetailView, CreateView, DeleteView
 
+from the_forum.accounts.exception_handler_middleware import handle_exception
 from the_forum.accounts.forms import UserCreateForm, UserEditForm, PasswordResetForm, UserProfileEditForm, \
     UserDeleteForm
 from the_forum.accounts.models import Profile
@@ -159,32 +161,16 @@ class UserEditView(LoginRequiredMixin, UpdateView):
         form = self.form_class(request.POST, instance=user)
         second_form = self.second_form_class(request.POST, instance=profile)
 
+        # TODO: exception for invalid names
         if form.is_valid() and second_form.is_valid():
             form.save()
             second_form.save()
-            return redirect(self.get_success_url())
+        return redirect(self.get_success_url())
 
     def get_success_url(self):
         return reverse_lazy('edit user', kwargs={
             'pk': self.request.user.pk,
         })
-
-
-'''
-        # user = UserModel.objects.filter(id=self.request.user.pk).get()
-        user_profile = UserProfileEditForm(instance=self.request.user)  # / instance=self.request.user.pk
-        user_form = UserEditForm(instance=self.request.user)
-        # user_profile_form = UserProfileEditForm(instance=self.request.user.pk)
-
-        context = super().get_context_data(**kwargs)
-        context.update({
-            # 'user': user.get_profile,
-            'user_profile': user_profile,
-            'user_form': user_form,
-            # 'user_profile_form': user_profile_form,
-        })
-        return context
-'''
 
 
 class UserDeleteView(LoginRequiredMixin, DeleteView):

@@ -80,14 +80,21 @@ main .container {
 
 ol .box {
     position: relative;
-    margin-left: 5px;
+    margin-left: 10px;
     bottom: 3px;
-
 }
 
 body .container li {
     list-style: none;
     padding: 10px;
+}
+
+.container .fname b {
+    width: 50px;
+}
+
+.container .lname b {
+    width: 50px;
 }
 
 .container button {
@@ -114,4 +121,11 @@ main .second-option p {
 
 main .second-option a {
     margin-left: 5px;
+}
+
+/* ERRORS */
+.container .pws .error {
+    position: relative;
+    display: inline-flex;
+    left: 200px;
 }

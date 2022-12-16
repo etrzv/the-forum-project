@@ -10,11 +10,17 @@ UserModel = get_user_model()
 # https://stackoverflow.com/questions/73811593/add-fields-from-another-model-to-the-admin-site
 
 
+# @admin.register(Profile)
+class ProfileAdministration(admin.StackedInline):
+    model = Profile
+
+
 @admin.register(UserModel)
 class UserAdministration(admin.ModelAdmin):
     add_form = UserCreateForm
     change_form = UserEditForm
     profile_change_form = UserProfileEditForm
+    inlines = (ProfileAdministration, )
 
     list_display = ('email', 'is_staff', 'is_superuser', 'is_active')  # what appears on the search bar above the users
     list_filter = ('is_staff', 'is_superuser', )    # filter on the right

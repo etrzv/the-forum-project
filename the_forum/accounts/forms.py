@@ -3,28 +3,41 @@ from django.contrib.auth import forms as auth_forms, get_user_model
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, UsernameField, ReadOnlyPasswordHashField, \
     PasswordChangeForm
 from django.core.exceptions import ValidationError
+from django.core import validators
 
+from core.validators import validate_only_letters
 from the_forum.accounts.models import Profile
-from the_forum.accounts.tasks import send_welcome_email_to_new_users
 
 UserModel = get_user_model()
 
 
 class UserCreateForm(UserCreationForm):
-    first_name = forms.CharField()
-    last_name = forms.CharField()
-    username = forms.CharField()
+    FIRST_NAME_MIN_LEN = 2
+    FIRST_NAME_MAX_LEN = 15
+    LAST_NAME_MIN_LEN = 2
+    LAST_NAME_MAX_LEN = 15
+    USERNAME_MAX_LEN = 25
+
+    first_name = forms.CharField(
+        max_length=FIRST_NAME_MAX_LEN,
+        validators=(
+            validators.MinLengthValidator(FIRST_NAME_MIN_LEN),
+            validate_only_letters,
+        ),
+    )
+
+    last_name = forms.CharField(
+        max_length=LAST_NAME_MAX_LEN,
+        validators=(
+            validators.MinLengthValidator(LAST_NAME_MIN_LEN),
+            validate_only_letters,
+        ),
+    )
+
+    username = forms.CharField(max_length=USERNAME_MAX_LEN,)
     # TODO: added
     # password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     # password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
-
-    # class UserCreateForm(auth_forms.UserCreationForm):
-    #     class Meta:
-    #         model = UserModel
-    #         fields = ('username', 'email')
-    #         field_classes = {
-    #             'username': auth_forms.UsernameField,
-    #         }
 
     class Meta:
         model = UserModel
@@ -61,20 +74,21 @@ class UserCreateForm(UserCreationForm):
         return user
 
 
-
 class UserEditForm(UserChangeForm):
-    # TODO: Changed for the admin site
     password = ReadOnlyPasswordHashField()
 
     class Meta:
         model = UserModel
-        # TODO: changed
         fields = ('email', )
         # exclude = ('password', )
         field_classes = {
             'email': auth_forms.UsernameField,
 
         }
+
+    def save(self, commit=True):
+        self.instance.save()
+        return self.instance
 
     # def clean_password(self):
     #     # Regardless of what the user provides, return the initial value.
@@ -84,6 +98,7 @@ class UserEditForm(UserChangeForm):
 
 
 class UserProfileEditForm(UserChangeForm):
+
     class Meta:
         model = Profile
         fields = ('username', 'first_name', 'last_name', )
@@ -100,7 +115,6 @@ class PasswordResetForm(PasswordChangeForm):
 
 class UserDeleteForm(forms.ModelForm):
     def save(self, commit=True):
-        # articles should remain after account deletion TODO: account author: Deleted
         self.instance.delete()
         return self.instance
 

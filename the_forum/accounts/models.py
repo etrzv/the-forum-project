@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin, User, AbstractUser
-from django.core.validators import MinLengthValidator
+from django.core import validators
 from django.db import models
 from django.utils import timezone
 
@@ -72,7 +72,7 @@ class Profile(models.Model):
     first_name = models.CharField(
         max_length=FIRST_NAME_MAX_LEN,
         validators=(
-            MinLengthValidator(FIRST_NAME_MIN_LEN),
+            validators.MinLengthValidator(FIRST_NAME_MIN_LEN),
             validate_only_letters,
         ),
         null=False,
@@ -82,7 +82,7 @@ class Profile(models.Model):
     last_name = models.CharField(
         max_length=LAST_NAME_MAX_LEN,
         validators=(
-            MinLengthValidator(LAST_NAME_MIN_LEN),
+            validators.MinLengthValidator(LAST_NAME_MIN_LEN),
             validate_only_letters,
         ),
         null=False,
@@ -93,6 +93,7 @@ class Profile(models.Model):
         max_length=USERNAME_MAX_LEN,
         null=False,
         blank=False,
+        unique=True,
     )
 
     profile_image = models.ImageField(
@@ -106,54 +107,3 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
         primary_key=True,
     )
-
-
-'''
-from django.db import models
-from django.contrib.auth.models import (
-    BaseUserManager, AbstractBaseUser
-)
-
-class MyUser(AbstractBaseUser):
-    email = models.EmailField(
-        verbose_name='email address',
-        max_length=255,
-        unique=True,
-    )
-    date_of_birth = models.DateField()
-    is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
-
-    objects = MyUserManager()
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['date_of_birth']
-
-    def get_full_name(self):
-        # The user is identified by their email address
-        return self.email
-
-    def get_short_name(self):
-        # The user is identified by their email address
-        return self.email
-
-    def __str__(self):              # __unicode__ on Python 2
-        return self.email
-
-    def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
-        # Simplest possible answer: Yes, always
-        return True
-
-    def has_module_perms(self, app_label):
-        "Does the user have permissions to view the app `app_label`?"
-        # Simplest possible answer: Yes, always
-        return True
-
-    @property
-    def is_staff(self):
-        "Is the user a member of staff?"
-        # Simplest possible answer: All admins are staff
-        return self.is_admin
-
-'''

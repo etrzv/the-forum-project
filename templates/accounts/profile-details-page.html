@@ -28,6 +28,13 @@
                                         {{ article.title }}
                                     </a>
                                 </li>
+                            <li>
+                                <b>Create another article:</b>
+                                    <div class="create_article">
+                                        <button type="submit">Create</button>
+                                        {% csrf_token %}
+                                    </div>
+                            </li>
                             </ol>
                         {% endfor %}
                     {% else %}
@@ -52,9 +59,6 @@
                         <h3>No bookmarked articles</h3>
                     {% endif %}
                 </div>
-
-                <button type="submit">Create</button>
-                {% csrf_token %}
             </ol>
         </div>
     </form>
