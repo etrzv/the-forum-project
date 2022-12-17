@@ -8,11 +8,8 @@ UserModel = get_user_model()
 
 class RegisterViewTests(TestCase):
     VALID_USER_DATA = {
-        # 'first_name': 'first name',
-        # 'last_name': 'last name',
         'email': 'test@user.com',
         'password': 'password',
-        # 'password2': 'password',
     }
 
     def test_create_user_when_valid_data__expect_created_user(self):

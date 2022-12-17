@@ -13,6 +13,7 @@ SECRET_KEY = 'django-insecure-44=o!ukczrlu$_yxiuvn=ko&g*wty2_ufvxls(d1uvyh^xuz)b
 DEBUG = False
 
 ALLOWED_HOSTS = ('127.0.0.1', 'localhost', )
+# ALLOWED_HOSTS = ()
 # ALLOWED_HOSTS = (env('ALLOWED_HOSTS').split(' '), )
 
 
@@ -133,3 +134,26 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 # CELERY_ACCEPT_CONTENT = ['application/json']
 # CELERY_RESULT_SERIALIZER = 'json'
 # CELERY_TASK_SERIALIZER = 'json'
+
+
+'''LOGGING = {
+    'version': 1,
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        }
+    }
+}'''

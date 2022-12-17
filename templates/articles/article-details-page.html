@@ -118,7 +118,7 @@
             <div class="comment_info">
                 <ol>
                     <li class="username">
-                        <a href="{% url 'details user' pk=article.user.pk %}" class="article_box_author_link">{{ comment.user.profile.username }}</a>
+                        <a href="{% url 'details user' pk=comment.user.pk %}" class="article_box_author_link">{{ comment.user.profile.username }}</a>
                     </li>
                     <li class="publication_date">
                         <em>{{ comment.publication_date }}</em>

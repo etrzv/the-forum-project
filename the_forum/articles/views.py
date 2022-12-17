@@ -26,31 +26,6 @@ from the_forum.common.models import ArticleComment, ArticleLike, ArticleDislike,
 # of the HTTP request, which makes for a cleaner URL and imposes no size limitations on the forms output.
 # It is also more secure.
 
-# WORKS:
-# @login_required
-# def add_article(request):
-#     # GET = view without change
-#     if request.method == 'GET':
-#         form = ArticleCreateForm()
-#     else:
-#         # POST = view and change
-#         form = ArticleCreateForm(request.POST)
-#         if form.is_valid():
-#             article = form.save(commit=False)
-#             article.user = request.user
-#             article.save()
-#             return redirect('show index')
-#         #     pet = form.save(commit=False)
-#         #     pet.user = request.user
-#         #     pet.save()
-#         #     return redirect('details user', pk=request.user.pk)
-#
-#     context = {
-#         'form': form,
-#     }
-#
-#     return render(request, 'articles/article-add-page.html', context)
-
 
 UserModel = get_user_model()
 
@@ -82,66 +57,8 @@ class ArticleEditView(LoginRequiredMixin, UpdateView):
         })
         return context
 
-    # TODO: check
-    # def form_valid(self, form):
-    #     form.instance.user = self.request.user
-    #     return super().form_valid(form)
-
-    # dispatch get calls get_context_data
-    # def dispatch(self, request, *args, **kwargs):
-    #     article = self.model.objects.get(slug=self.object.id)
-    #
-    #     if request.method == 'POST':
-    #         self.form_class = ArticleEditForm(request.POST, instance=article)
-    #     else:
-    #         self.form_class = ArticleEditForm(instance=article)
-    #
-    #     return self.form_class
-
     def get_success_url(self):
         return reverse_lazy('edit article', kwargs={'slug': self.object.slug})
-
-
-'''    
-def get_queryset(self):
-        # This method is called by the default implementation of get_object() and
-        # may not be called if get_object() is overridden.
-        obj = get_object_or_404(
-            Article,
-            article_slug=self.kwargs['article_slug'])
-        return obj
-    
-        # obj = get_object_or_404(Post, category__slug=self.kwargs['category_slug'],slug=self.kwargs['post_slug'] )
-        # return obj
-    
-'''
-
-
-# def edit_article(request, username, article_slug):
-#     article = Article.objects.filter(slug=article_slug).get()
-
-# # if not is_owner(request, article):
-# #     return redirect('details pet', username=username, pet_slug=pet_slug)
-#
-# if request.method == 'GET':
-#     form = ArticleEditForm(instance=article)
-# else:
-#     form = ArticleEditForm(request.POST, instance=article)
-#     if form.is_valid():
-#         form.save()
-#         return redirect('show index', username=username, article_slug=article_slug)
-#
-# context = {
-#     'form': form,
-#     'article_slug': article_slug,
-#     'username': username,
-# }
-#
-# return render(
-#     request,
-#     'articles/article-edit-page.html',
-#     context,
-# )
 
 
 class ArticleDetailsView(LoginRequiredMixin, DetailView):
@@ -216,37 +133,3 @@ class ArticleDeleteView(LoginRequiredMixin, DeleteView):
         return context
 
 
-'''
-
-class UserDetailsView(views.DetailView):
-    template_name = 'accounts/profile-details-page.html'
-    model = UserModel
-    articles_paginate_by = 2
-
-    def get_articles_page(self):
-        return self.request.GET.get('page', 1)
-
-    def get_paginated_articles(self):
-        article = self.get_articles_page()
-
-        articles = self.object.article_set \
-            .order_by('-publication_date')
-
-        paginator = Paginator(articles, self.articles_paginate_by)
-        return paginator.get_page(article)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['is_owner'] = self.request.user == self.object
-
-        articles = self.object.article_set \
-            .prefetch_related('articleslike_set')
-
-
-        context['articles'] = self.get_paginated_articles()
-        context['article'] = self.object.article_set.all()
-
-        return context
-
-'''

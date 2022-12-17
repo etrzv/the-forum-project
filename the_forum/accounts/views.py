@@ -9,7 +9,6 @@ from django.urls import reverse_lazy
 from django.contrib.auth import update_session_auth_hash
 from django.views.generic import UpdateView, DetailView, CreateView, DeleteView
 
-from the_forum.accounts.exception_handler_middleware import handle_exception
 from the_forum.accounts.forms import UserCreateForm, UserEditForm, PasswordResetForm, UserProfileEditForm, \
     UserDeleteForm
 from the_forum.accounts.models import Profile
@@ -94,11 +93,6 @@ class UserDetailsView(DetailView):
 
         #                                              self.object is a Profile
         articles = list(Article.objects.filter(user_id=self.object.pk))
-        # photos = self.object.photo_set \
-        #   .prefetch_related('photolike_set')
-
-        # user = UserModel.objects.get(id=self.request.user.pk)
-        # user_profile = Profile.objects.get(user_id=self.request.user.pk)
 
         # Photo's field for likes is named `{NAME_OF_THIS_MODEL.lower()}_set`
         # using APIs we can access related objects
@@ -108,8 +102,6 @@ class UserDetailsView(DetailView):
         is_owner = self.request.user == self.object
         context.update({
             'articles': articles,
-            # 'user': user,
-            # 'user_profile': user_profile,
             'bookmarked_articles': bookmarked_articles,
             'is_owner': is_owner,
             'search_form': self.search_form,
@@ -161,7 +153,6 @@ class UserEditView(LoginRequiredMixin, UpdateView):
         form = self.form_class(request.POST, instance=user)
         second_form = self.second_form_class(request.POST, instance=profile)
 
-        # TODO: exception for invalid names
         if form.is_valid() and second_form.is_valid():
             form.save()
             second_form.save()

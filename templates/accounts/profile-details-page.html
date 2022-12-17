@@ -22,24 +22,24 @@
                         <h3>Created Articles:</h3>
                         {% for article in articles %}
                             <ol>
-                                <li>
-                                    <b>Article's Title:</b>
+                                <li class="article">
                                     <a href="{% url 'details article' article.slug %}">
                                         {{ article.title }}
                                     </a>
                                 </li>
-                            <li>
-                                <b>Create another article:</b>
-                                    <div class="create_article">
-                                        <button type="submit">Create</button>
-                                        {% csrf_token %}
-                                    </div>
-                            </li>
                             </ol>
                         {% endfor %}
                     {% else %}
                         <h3>No created articles</h3>
                     {% endif %}
+                    <div class="create_article">
+                        {% if object.pk == request.user.id %}
+                            <h3>Create an Article:</h3>
+                                <button type="submit">Create</button>
+                                {% csrf_token %}
+                        {% endif %}
+                    </div>
+
                 </div>
                 <div class="bookmarked_articles">
                     {% if bookmarked_articles %}
@@ -48,7 +48,6 @@
                         <ol>
                             {% for b_article in bookmarked_articles %}
                                 <li class="title">
-                                    <b>Article's Title:</b>
                                     <a href="{% url 'details article' b_article.article.slug %}">
                                         {{ b_article.article.title }}
                                     </a>

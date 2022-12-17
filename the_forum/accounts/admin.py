@@ -66,9 +66,9 @@ class UserAdministration(admin.ModelAdmin):
                     'email',
                     'password1',
                     'password2',
-                    # 'first_name',
-                    # 'last_name',
-                    # 'username',
+                    'first_name',
+                    'last_name',
+                    'username',
                 ),
             }
          ),

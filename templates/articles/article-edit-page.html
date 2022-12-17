@@ -4,35 +4,34 @@
 {% load placeholders %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/articles/article-edit.css' %}" />
-{#            username=username pet_slug=pet_slug#}
-            <form method="post" action="{% url 'edit article' article.slug %}">
-                <article class="container">
-                    <h2>Edit your article below:</h2>
-                    <ol>
-                        <li class="title">
-                            <b>Article's Title:</b>
-                            {{ form_class.title }}
-                        </li>
-                        <li class="photo">
-                            <b>Link to Image:</b>
-                            {{ form_class.photo|placeholder:'Link' }}
-                            <p><em>(optional)</em></p>
-                        </li>
-                        <li class="content">
-                            <b>Article's Content:</b>
-                            <p class="content_box">{{ form_class.content }}</p>
-                        </li>
-                        <li>
-                            <button type="submit">Edit</button>
-                            {% csrf_token %}
-                        </li>
-                        <li>
-                            <a href="{% url 'delete article' article.slug %}" class="delete_link">
-                                Or delete your article here.
-                            </a>
-                        </li>
-                    </ol>
-                </article>
-            </form>
+    <form method="post" action="{% url 'edit article' article.slug %}">
+        <article class="container">
+            <h2>Edit your article below:</h2>
+            <ol>
+                <li class="title">
+                    <b>Article's Title:</b>
+                    {{ form_class.title }}
+                </li>
+                <li class="photo">
+                    <b>Link to Image:</b>
+                    {{ form_class.photo|placeholder:'Link' }}
+                    <p><em>(optional)</em></p>
+                </li>
+                <li class="content">
+                    <b>Article's Content:</b>
+                    <p class="content_box">{{ form_class.content }}</p>
+                </li>
+                <li>
+                    <button type="submit">Edit</button>
+                    {% csrf_token %}
+                </li>
+                <li>
+                    <a href="{% url 'delete article' article.slug %}" class="delete_link">
+                        Or delete your article here.
+                    </a>
+                </li>
+            </ol>
+        </article>
+    </form>
 
 {% endblock %}

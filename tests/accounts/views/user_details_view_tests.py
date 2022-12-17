@@ -5,14 +5,7 @@ from tests.accounts.BaseTestCase import TestCaseBase
 from tests.utils.creation_utils import create_articles_for_user, create_article_likes_for_user_and_articles
 
 UserModel = get_user_model()
-'''
-            'articles': articles,
-            # 'user': user,
-            # 'user_profile': user_profile,
-            'bookmarked_articles': bookmarked_articles,
-            'is_owner': is_owner,
-            'search_form': self.search_form,
-'''
+
 
 class UserDetailsViewTests(TestCaseBase):
     VALID_USER_DATA = {
@@ -49,27 +42,3 @@ class UserDetailsViewTests(TestCaseBase):
         response = self.client.get(reverse_lazy('details user', kwargs={'pk': user.pk}))
 
         self.assertEmpty(response.context['articles'])
-
-'''    
-    user_likes_articles = ArticleLike.objects.filter(article_id=article.id, user_id=user.pk)
-
-    
-    def test_user_likes__when_user_has_0_likes__expect_0_likes(self):
-        user = self._create_user_and_login(self.VALID_USER_DATA)
-        expected_likes = 0
-        user.likes = 0
-        self.assertFalse(expected_likes, user.likes)
-
-    def test_user_dislikes__when_user_has_10_dislikes__expect_10_dislikes(self):
-        user = self._create_user_and_login(self.VALID_USER_DATA)
-        dislikes_count = 10
-        user.dislikes = dislikes_count
-        self.assertEqual(dislikes_count, user.dislikes)
-        self.assertTrue(dislikes_count, user.dislikes)
-
-    def test_user_dislikes__when_user_has_0_dislikes__expect_0_dislikes(self):
-        user = self._create_user_and_login(self.VALID_USER_DATA)
-        expected_dislikes = 0
-        user.dislikes = 0
-        self.assertEqual(expected_dislikes, user.dislikes)
-        self.assertFalse(expected_dislikes, user.dislikes)'''

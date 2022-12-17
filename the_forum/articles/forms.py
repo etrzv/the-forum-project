@@ -9,15 +9,10 @@ class ArticleCreateForm(forms.ModelForm):
         model = Article
         fields = ('title', 'photo', 'content', 'id', 'slug')
 
-        # labels = {
-        #     "title": "Article's Title",
-        #     "photo": 'Link to image (optional)',
-        #     "content": "Article's Content",
-        # }
-
         widgets = {
-            'title': forms.Textarea(attrs={'rows': 1, 'cols': 20}),
-            'content': forms.Textarea(attrs={'rows': 4, 'cols': 20}),
+            'title': forms.Textarea(attrs={'rows': 1, 'cols': 55}),
+            'photo': forms.Textarea(attrs={'rows': 1, 'cols': 55}),
+            'content': forms.Textarea(attrs={'rows': 15, 'cols': 73}),
         }
 
 

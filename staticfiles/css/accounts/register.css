@@ -101,7 +101,7 @@ body .container li {
     position: relative;
     font-size: 20px;
     margin: 5px;
-    left: 80%;
+    left: 50%;
 }
 
 .container button:hover {

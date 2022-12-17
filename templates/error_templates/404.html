@@ -1,0 +1,14 @@
+{% extends "base/base.html" %}
+{{ search_form }}
+{% block page_content %}
+{% load placeholders %}
+{% load static %}
+    <div class="not-found">
+        <h1>
+            Error 404 - page not found error.
+            <a href="{% url 'show index' %}">
+                <button>Return to The Forum</button>
+            </a>
+        </h1>
+    </div>
+{% endblock %}

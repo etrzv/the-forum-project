@@ -20,10 +20,6 @@ UserModel = get_user_model()
 def index(request):
     search_form = SearchArticleForm(request.GET)
     search_pattern = None
-    # user = request.user.pk
-    #
-    # if not user:
-    #     return redirect('login user')
 
     if search_form.is_valid():
         search_pattern = search_form.cleaned_data['title']
@@ -39,7 +35,6 @@ def index(request):
     context = {
         'articles': articles,
         'search_form': search_form,
-        # 'user': user,
         'likes': likes,
         'dislikes': dislikes,
 
@@ -50,68 +45,6 @@ def index(request):
         'common/home-page.html',
         context,
     )
-
-
-'''
-class HomeView(TemplateView):
-    # TODO: should it redirect there
-    template_name = 'common/home-page.html'
-    form_class = SearchArticleForm
-    search_pattern = None
-
-    def get_form(self, form_class):
-        return form_class(self.request.GET)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        articles = Article.objects.all().order_by('-date_created')
-
-        if self.search_pattern:
-            articles = articles.filter(title__contains=self.search_pattern).order_by('-date_created')
-        
-        # if search_form.is_valid():
-        # search_pattern = search_form.cleaned_data['title']
-        # if self.search_pattern:
-        #     articles = Article.objects.filter(title__contains=self.search_pattern).order_by('-date_created')
-        # articles = Article.objects.all()
-        
-        # user = UserModel.objects.filter(id=self.request.user.pk).get()
-        # user_like_articles = Article.objects.filter(pk=article.id, user_id=self.request.user.pk)
-        # likes = [apply_likes_count(article) for article in articles]
-        # dislikes = [apply_dislikes_count(article) for article in articles]
-
-        context.update({
-            'articles': articles,
-            'form_class': self.form_class,
-            # 'likes': likes,
-            # 'dislikes': dislikes,
-        })
-
-        #                      done in utils
-        # context['articles'] = Article.objects.all()
-        # context['articles_likes'] = [apply_likes_count(article) for article in Article.objects.all()]
-        # context['articles_dislikes'] = [apply_dislikes_count(article) for article in Article.objects.all()]
-        # context['username'] = user.get_username
-        # context['articles'] = articles
-        # context['likes'] = Article.objects.prefetch_related('like_set').all()
-
-        #     photo = Photo.objects.filter(pk=pk) \
-        #         .get()
-
-        # context['articles'] = UserModel.objects.filter.get()
-        # context['profile'] = UserModel.objects\
-        #     .prefetch_related('tagged_articles')\
-        #     .filter(tagged_articles__user_profile=self.request.user)
-        # TODO: how to connect the articles to the current user
-
-        return context
-
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return redirect('login user')
-        return super().dispatch(request, *args, **kwargs)
-
-'''
 
 
 @login_required
